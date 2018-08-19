@@ -1,1 +1,1 @@
-# aws-certification-study-notes
+# aws-certification-notes

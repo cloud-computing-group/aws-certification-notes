@@ -1,0 +1,1 @@
+Redshift是 AWS 提供的 data warehouse (数据仓库)服务。
