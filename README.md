@@ -5,7 +5,7 @@ running-containerized-microservices-on-aws 至P10/P25
 aws-cloud-best-practices 至P5/P42  
 
 ## A Cloud Guru
-至 https://acloud.guru/course/aws-certified-solutions-architect-associate/learn/ec2/security-groups/watch  
+至 https://acloud.guru/course/aws-certified-solutions-architect-associate/learn/ec2/cloudwatch/watch  
 
 ## 其他
 ### Solutions Architect Associate
