@@ -5,7 +5,8 @@ running-containerized-microservices-on-aws 至P10/P25
 aws-cloud-best-practices 至P5/P42  
 
 ## A Cloud Guru
-至 https://acloud.guru/course/aws-certified-solutions-architect-associate/learn/vpc/overview/watch  
+至 https://acloud.guru/course/aws-certified-solutions-architect-associate/learn/application-services/swf/watch  
+笔记在学习SysAdmin时再做  
 
 ## 其他
 ### Solutions Architect Associate
