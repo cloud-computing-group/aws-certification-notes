@@ -18,5 +18,6 @@ https://blog.codeship.com/querying-and-pagination-with-dynamodb/ 已完成
     https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html 已完成  
 </details>
 
-### Useful Notes
-http://mistwire.com/2016/05/aws-certified-solutions-architect-associate-study-notes/
+### Useful Resources
+http://mistwire.com/2016/05/aws-certified-solutions-architect-associate-study-notes/  
+https://www.whizlabs.com/  
