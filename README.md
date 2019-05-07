@@ -6,7 +6,8 @@ aws-cloud-best-practices 至 P5/P42
 
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
-AWS Certified Developer Associate 至 https://acloud.guru/course/aws-certified-developer-associate-june-2018/learn/d08a2b54-37e1-d237-21a7-55eea7c0fb2d/3d46ec9f-ee94-25d8-d79e-092b5cb8e98f/watch  
+AWS Certified Developer Associate 至 `Beginners Guide to EC2 / EC2 101`  
+AWS Certified SysOps Administrator Associate 至 `Monitoring & Reporting / Monitoring ELB`  
 注：笔记在学习Developer和SysAdmin时做  
 
 ## 其他
