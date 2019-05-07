@@ -40,7 +40,7 @@ CloudWatch 不仅可以监控云上资源，还可以用于 on premise 的资源
   
   
   
-CSA Test Notes:  
+CSAA Test Notes:  
 * CloudWatch Logs help to aggregate, monitor and store logs itself (by installing agent on EC2)  
 * Export to S3, stream to Lambda/ElasticSearch  
 * CloudWatch Events help to respond to state changes in AWS resources.  

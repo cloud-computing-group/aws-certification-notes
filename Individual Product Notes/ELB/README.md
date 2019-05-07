@@ -6,7 +6,7 @@ ELB 全称 Elastic Load Balancers，主要包括 3 种 Load Balancer:
   
   
   
-CSA Test Notes:  
+CSAA Test Notes:  
 * Monitoring ELB: CloudWatch metrics, Access Logs, Request tracing, and CloudTrail Logs.
 * ELB logs can be enabled and stored in S3, use SSE-S3 for encryption.
 * ELB log analysis - Athena analyse S3 using SQL.
