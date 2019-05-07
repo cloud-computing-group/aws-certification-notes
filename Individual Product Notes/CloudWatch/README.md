@@ -37,3 +37,10 @@ CloudWatch 不仅可以监控云上资源，还可以用于 on premise 的资源
 
 为 EC2 实例自定义 CloudWatch Metric：  
 首先需要通过 IAM 给该 EC2 实例附上一个 CloudWatch full access（实际不需要这么高权限）的 Role，如果该 EC2 实例是新建则增添 bootstrap shell/bash script（如果是已有实例可以自己 SSH 该实例）来下载安装 perl 语言及其相关包、重定向至 /home/ec2-user/ 并下载解压安装 AWS 官方 CloudWatchMonitoringScript 并最后在该实例后台持续/周期性运行该脚本即可（教程里是基于 Linux 环境并通过 crond 和 crontab 设置为每分钟执行一次脚本命令 put 数据到 CloudWatch）。（另外请确保该 EC2 实例的 Security、VPC 的 SSH、HTTP 配置机制符合此场景）  
+  
+  
+  
+CSA Test Notes:  
+* CloudWatch Logs help to aggregate, monitor and store logs itself (by installing agent on EC2)  
+* Export to S3, stream to Lambda/ElasticSearch  
+* CloudWatch Events help to respond to state changes in AWS resources.  
