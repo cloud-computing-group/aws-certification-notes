@@ -7,7 +7,7 @@ aws-cloud-best-practices 至 P5/P42
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
 AWS Certified Developer Associate 至 `Beginners Guide to EC2 / EC2 101`  
-AWS Certified SysOps Administrator Associate 至 `Monitoring & Reporting / Monitoring ELB`  
+AWS Certified SysOps Administrator Associate 至 `Monitoring & Reporting / Monitoring Elasticache`  
 注：笔记在学习Developer和SysAdmin时做  
 
 ## 其他
