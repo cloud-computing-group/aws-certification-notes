@@ -1,4 +1,4 @@
-### A Cloud Guru
+## A Cloud Guru
 EBS 即 attached 到 EC2 实例的虚拟硬盘（virtual disk）.  
 大致有四种 Storage:  
 1. General Purpose SSD（API name: gp2） - 适用于大部分场景如虚拟桌面，系统的boot volumes，运行低延迟交互应用，测试、沙盒环境，最大吞吐量率是 10000 IOPS。
@@ -11,14 +11,14 @@ General Purpose SSD 的 baseline performance 和 burst performance：比如有�
 I/O Credits：每个 volume 初始有 5,400,000 I/O credits 的 balance，足以维持最大 burst performance（3000 IOPS）持续30分钟，平时没有使用 burst 或超过 provisioned IO level 时就会积攒这个 I/Ocredits。  
 EBS 新建时即可达到其本身最佳性能，这称之为 pre-warming，但是如果是从 snapshots 中唤醒原 EBS 的话则会需要一段时间才能达到原最佳性能，比如首次数据访问有 I/O 延迟，为避免此状况，可以在正式恢复唤醒一个 EBS volume 前提前唤醒并读取 volume 所有的 blocks。  
   
-EBS CloudWatch Metrics：  
+### EBS CloudWatch Metrics：  
 * Metric VolumeReadOps：指定时间内总计的 I/O 读操作次数。  
 * Metric VolumeWriteOps：指定时间内总计的 I/O 写操作次数。  
 （应用场景：比如上面的平均读写操作次数（metric 的总计次数除以观察时间的总秒数）超过 10000 IOPS 的话，就应该考虑使用 Provisioned IOPS SSD 的 EBS 了。）  
 * Metric VolumeQueueLength：指定时间内等待进行读写操作的请求数量。  
   
-Volume Status Checks：  
+### Volume Status Checks：  
 有四种状态：ok、warning（degraded）、impaired（stalled 或 not available）、insufficient-data.  
   
-Modifying EBS Volumes：  
+### Modifying EBS Volumes：  
 如果已经 EBS volume 已经 attached 到 EC2 实例上，无论有没有 detach 实例都可以通过 console 或 command line 修改它（increase size、change type etc），并可以监控其更新进度。  

@@ -1,4 +1,4 @@
-CSAA Test Notes:  
+## CSAA Test Notes:  
 * Not for RDS scaling.
 * Launch configurations: AMI ID, instance type, key pair, SGs, block device mapping, etc.
 * Can send notification/alarm to recipient, and SNS topic. (few steps for metrics, launch/terminated, or failed to launch/terminited.)
