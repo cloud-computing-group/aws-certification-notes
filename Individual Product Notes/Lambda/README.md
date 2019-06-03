@@ -48,3 +48,13 @@ Alias 还有一个强大的功能是可以指向多个版本（split traffic）�
 * Versions are immutable (That version's lambda function code cannot be changed).
 * Can split traffic using aliases to different versions.
     * Cannot split traffic with $LATEST, instead create an alias to latest.
+  
+### An Introduction to Alexa
+* Skill Service: AWS Lambda
+* Skill Interface: Invocation Name, Intent Schema, Slot Type, Utterances
+Make an Alexa Skill Lab:  
+1. Create S3 Bucket for store mp3 files, go to AWS Polly service and upload some text, then click generate speech (mp3 file) and send to the S3 bucket (config the url in AWS Polly service).  
+2. Create a Lambda to respond a Alexa command / utterance (there is public Lambda code available on AWS Lambda blueprint for free, just create Lambda function based on the blueprint), in the code can change "data" variable point to the S3 bucket's mp3 file's url.  
+3. Copy the created Lambda ARN, open / login Alexa official web console, create new Fact skill and paste the ARN to Endpoint -> AWS Lambda ARN, set utterance to trigger that Lambda, click "build model".  
+4. Know can online test or really talk to Alexa with that command / utterance to trigger and hear that mp3 sound.
+  
