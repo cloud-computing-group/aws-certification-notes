@@ -28,3 +28,23 @@ Lambda是 AWS 提供的只需按使用的计算时间付费的可运行开发者
 * Lambda triggers (has many).
   
 ### Lambda 的版本控制
+当对 Lambda function 进行版本控制时，可以 publish 一个或多个该 function 的版本，因此可以允许开发者在其的开发工作流程里保有多个不同的分支（development、beta、production etc）。  
+每一个 Lambda function 的版本都有一个唯一的 ARN（Amazon Resource Name）。一旦版本 publish（发布后），该 ARN 再不能修改。  
+AWS Lambda 会保存缓存你的最近更新的 function 代码，并存于一个叫 $LATEST 的版本里，当你更新你的 function 代码时，新的代码就会自动覆盖更新这个版本。  
+  
+### Qualified / Unqualified ARN
+* 当需要引用某个 Lambda function 时，可以使用其 ARN（Amazon Resource Name）来引用它（比如写 role 配置或 terraform 时）。有两种 ARN 与此缓存版本（$LATEST）关联：
+* Qualified ARN - function ARN 带版本 suffix：arn:aws:lambda:aws-region:acc-id:function:helloworld:$LATEST
+* Unqualified ARN - function ARN 没有带版本 suffix：arn:aws:lambda:aws-region:acc-id:function:helloworld
+  
+### Alias
+可以创建一个 Alias 指向任何一个版本，好处在于当打算在产品实用更新到其他版本时，可以只把 Alias 指向的版本设置更新（remapping）即可，则引用该 Alias 的 ARN 的代码或配置等都不需要改动（比如引用 ARN 的 Terraform），如果新版本出了问题，roll back 也十分简单只需要把 PROD Alias remapping 回原先版本即可。  
+Alias 还有一个强大的功能是可以指向多个版本（split traffic），即运行或收到请求时，可以被设置为将其中一定比例的请求指向版本A，另外一定比例的请求指向版本B。
+  
+### Exam Tips
+* Can have multiple version of lambda functions.
+* Latest version will use $LATEST
+* Qualified version will use $LATEST, unqualified version will not have it.
+* Versions are immutable (That version's lambda function code cannot be changed).
+* Can split traffic using aliases to different versions.
+    * Cannot split traffic with $LATEST, instead create an alias to latest.
