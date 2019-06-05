@@ -54,3 +54,26 @@ API Caching 可以缓存你的 endpoint 响应（比如多次请求中请求的 
 * Can log results to CloudWatch.
 * If using JavaScript/Ajax that uses multiple domains with API Gateway, ensure that have enabled CORS on API Gateway.
 * CORS is enforced by the client.
+  
+### Advanced API Gateway - Import APIs
+开发者可以使用 API Gateway 的 API 导入功能导入在外部写好的 API 定义文件，比如 Swagger v2.0 定义文件就受到支持。有了 API 导入功能，开发者可以通过 POST 请求（调用 AWS API）（在payload 里携带 Swagger 定义信息以及 endpoint 配置信息）创建新的 API，也可以通过 PUT 请求（在payload 里携带 Swagger 定义信息）更新已有的 API（更新有两种方式：完全重写定义、与一个已有 API 合并定义，开发者可以通过在 HTTP 请求的目标URL里添加 mode query parameter 指定使用哪一种更新方式）。(通过 Swagger 创建 API 在 AWS API Gateway 的控制台里也可以执行）（Exam Tip: you can't import existing API using swagger file)  
+  
+### Advanced API Gateway - API Throttling（DDOS protect）
+默认情况下，API Gateway 对 steady-state 请求的频率限制为 10000 requests per second (rps)。  
+最大并发请求是 5000 个请求（这是同一 AWS 根账号的所有 API 的总限制）。  
+如果你超过 10000 rps 或最大并发请求（5000），你会收到一个 `429 Too Many Request` 错误响应。  
+更多具体信息：  
+* 如果长时间持续地每一秒不多不少总是收到 10000 请求（均匀地每毫秒 10 个请求），API Gateway 都会正常处理不会丢失任何一个请求。
+* 如果在某一秒内，第一个毫秒收到 10000 个请求，API Gateway 会只服务、处理其中 5000 个请求（使用最大并发请求处理），并在此 1 秒的剩余时间内限制、阻截任何剩余的、新的请求。
+* 如果在某一秒内，第一个毫秒收到 5000 个请求，并在剩余的 999 毫秒里均匀地收到 5000 个请求（每毫秒 5 个请求），API Gateway 可以正常处理这全部 10000 个请求且不返回 `429 Too Many Request` 错误响应。
+* 如果调用方在第一毫秒提交 5000 个请求，然后等到第 101 毫秒再提交另外 5000 个请求，则 API Gateway 会处理 6000 个请求，并限制一秒内的剩余请求数量。这是因为，在 10000 rps 的速率下，API Gateway 已经在前 100 毫秒响应了 1000 个请求，因此清空了同样数量的存储桶。在接下来的 5000 个请求高峰中，有 1000 个请求会进入存储桶并排队等待处理。其他 4000 个超出存储桶容量的请求会被丢弃。
+* 如果调用方在第一毫秒提交 5000 个请求，在第 101 毫秒提交 1000 个请求，然后在剩余 899 毫秒内均匀提交另外 4000 个请求，则 API Gateway 会在一秒内处理所有 10000 个请求，不会施加限制。
+  
+### Advanced API Gateway - SOAP Webservice Passthrough
+开发者可以配置 API Gateway 来使其作为 SOAP Webservice Passthrough。（https://www.rubix.nl/blogs/how-configure-amazon-api-gateway-soap-webservice-passthrough-minutes/）
+  
+### Advanced API Gateway - Exam Tips:
+* Import API's using Swagger 2.0 definition files
+* API Gateway can be throttled（开发者可以设置默认方法限制）
+    * Default limits are 10000 rps or 5000 concurrently
+* You can configure API Gateway as a SOAP Webservice passthrough
