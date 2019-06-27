@@ -72,4 +72,9 @@ FAQ：https://aws.amazon.com/s3/faqs/
 * 可以通过以下为 bucket 设置访问权限：
     * Bucket Policies（可通过 JSON 设置）：可作用于单个 bucket 上（被授权人或组能且只能访问/操作该 bucket 中的数据）
     * Access Control Lists：可作用于单个 object 上（被授权人或组能且只能访问/操作该 object 数据）
-* S3 bucket 可以通过配置来创建访问日志，该日志会自动记录所有对该 bucket 的访问记录，而该记录可以被写进到另一个 bucket 中。
+* S3 bucket 可以通过配置来创建访问日志，该日志会自动记录所有对该 bucket 的访问记录，而该记录可以被写进到另一个 bucket 中。（创建 bucket 时的第二步的 Server access logging 就可以选择启用日志以记录访问、请求记录。补充：第二步里另外有选项甚至可以启用基于 AWS CloudTrail 的 Object-level logging 即记录 Object-level 的 API 交互记录）
+  
+### S3 ACLs & Policies
+Steps:  
+1. 创建 bucket，（补充可以在此步骤启用加密，默认可选 AES-256 或 AWS-KMS）
+2. 
