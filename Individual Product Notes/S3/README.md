@@ -77,4 +77,47 @@ FAQ：https://aws.amazon.com/s3/faqs/
 ### S3 ACLs & Policies
 Steps:  
 1. 创建 bucket，（补充可以在此步骤启用加密，默认可选 AES-256 或 AWS-KMS）
-2. 
+2. 访问限制公共 ACLs 或 Policies 操作该 bucket（可在上一步或之后设置，初始默认为限制）（除了通过创建步骤，你也可以在之后在 Permission 选项卡里通过编写 JSON 来设置这些）
+3. 在 bucket 中创建文档并上传文件（Object-level），在 set permission 一栏，可以赋予权限给某 User 或甚至某 Account 甚至公共可访问（其实即是设置 ACLs，并且 ACLs 是 Object-level 的）。（set permission 之后可设置 S3 层级/类别、元数据以及加密）
+  
+在拥有相关权限后，你可以通过控制台的 Open 按钮打开/访问 S3 私密文件（会使用并验证你的 AWS 账号 credentials），但是如果通过浏览器地址栏直接输入 S3 文件链接则不行，因为浏览器打开 S3 文件链接时是以匿名形式打开的，因此即使已经在该浏览器已登录了拥有权限的 AWS 账号，你仍然无法直接通过文件链接下载或打开文件，除非将该文件设置成公共可访问（但所在 bucket 也必须是公共可访问的，但是公共的 bucket 却可以把里面的某个或某些文件设置成非公开的、私密的）。
+  
+### S3 Encryption（加密）
+* 在传输过程中加密
+    * SSL / TLS
+
+* 其他
+    * 服务端加密
+        * S3 管理密钥 - SSE-S3（每个 object 都被自己独有的密钥进行多重要素加密，这些密钥同时也被一个主密钥加密，该主密钥会定时更新，这些全部自动由 AWS 运作，且全部为 AES-256 加密标准）（以上加密只需通过在 S3 里设置 object 时启用 encryption 选项即可，十分简单方便）
+        * AWS Key Management Service，管理密钥，SSE-KMS（此服务 AWS 为你管理密钥，你会获得一个 envelope 密钥的独立的权限，该密钥用于加密那些加密你的数据的密钥，在高级别层面上防止非认证访问，并且会有审计记录每次加密密钥的使用、S3 bucket 加密解密操作、原因等等的历史。在实际应用中除了可以使用系统提供的默认的全球独你拥有的唯一密钥外，你也可以用自己的自定义的密钥）
+        * 用自定义/自提供的密钥进行服务端加密，SSE-C（AWS 负责、管理系统中加密解密等所有安全过程处理、操作，但是由开发者自己进行密钥的管理 - 包括安全放置收藏、定时更新、生命周期等等）
+    
+    * 客户端加密（开发者在上传文件至 AWS 平台比如 S3 之前，先对文件、数据进行加密。因此开发者可自行选择加密方法方式、选择自己的应用来进行加密过程）
+  
+### 强制 S3 上的 bucket 进行加密（服务端加密）
+* 每次文件上传至 S3 时，会初始化一个 PUT 请求
+* 该 PUT 请求如下：
+```
+PUT /myFile HTTP/1.1
+Host: myBucket.s3.amazonaws.com
+Date: Web,25 Apr 2018 09:50:00 GMT
+Authorization: authorization string
+Content-Type: text/plain
+Content-Length: 27364
+x-amz-meta-author: myName
+Expect: 100-continue
+x-amz-server-side-encription-parameter: AES256
+[27364 bytes of object data]
+```
+* 如果要在上传时进行加密（服务端加密），请求的 header 里应包括  x-amz-server-side-encription-parameter
+* 现在有两种参数选择：
+    * x-amz-server-side-encription-parameter: AES256 （SSE-S3）
+    * x-amz-server-side-encription-parameter: ams:kms （SSE-KMS）
+* 当在 PUT 请求 header 里调用以上之一的参数时，即告知 S3 在文件上传过程中使用制定方法加密文件、数据。
+* 可以通过 S3 bucket 的 permission 里设置 bucket policy 强制服务端加密，设置为任何不包括 x-amz-server-side-encription-parameter 的 S3 PUT 请求都会被拒绝。
+  
+### Set Up Encryption On an S3 Bucket
+awspolicygen.s3.amazonaws.com/policygen.html（这个地址可以通过各种下拉菜单选择、表格填写，自动方便地生成各种 policy 的 JSON 设置代码）  
+上传代码时，创建过程里的 Set properties 的 Encryption 选项是服务端加密（即与 x-amz-server-side-encription-parameter 相关）。
+  
+### CORS Configuration Lab
