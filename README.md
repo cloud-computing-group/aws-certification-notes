@@ -7,7 +7,7 @@ aws-cloud-best-practices 至 P5/P42
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
 AWS Certified Developer Associate 至 `Beginners Guide to EC2 / EC2 101`，另外已看章节 `S3` 到 `CORS Configuration Lab`，已完成章节 `Introduction to Serverless Computing`  
-AWS Certified SysOps Administrator Associate 至 `Monitoring & Reporting / Metrics From Multiple Regions & Custom Dashboards`  
+AWS Certified SysOps Administrator Associate 至 `Monitoring & Reporting / AWS Organisations Lab`  
 AWS Certified DevOps Engineer Professional 至 `SDLC Automation / What is CI/CD`
 注：笔记在学习Developer和SysAdmin时做  
 

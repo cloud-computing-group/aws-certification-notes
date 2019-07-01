@@ -40,6 +40,20 @@ CloudWatch 不仅可以监控云上资源，还可以用于 on premise 的资源
   
   
   
+### Metrics From Multiple Regions & Custom Dashboards
+CloudWatch -> Dashboards -> Create new dashboard -> add / select widget type (then select metrics for the widget, widget can be renamed) -> save dashboard.  
+add / select widget type (比如给 EC2 metrics 如 CPU（Utilization）、Network（Throughput）添加 Line Widgets, DynamoDB 的 metrics 如 provisioned write / read capacity units 添加 Number Widget)  
+CloudWatch Dashboard 是 cross region 的、全球的，意味着哪个 Region 访问 dashboard 看到的都一样。但是 add widget 时选择 metrics 时所能看到的可选 metrics 会受到 region 的影响。  
+Add widget 的话也可以在以下路径实现：CloudWatch -> Metrics -> select metrics -> Actions (top-right of console) -> add widget.  
+  
+#### Exam Tips:
+CloudWatch - Dashboards are multi-region and can display any widget to any region. To add the widget, change to the region that you need and then add the widget to the dashboard.
+  
+### Create A Billing Alarm
+无所谓哪个 region, 点击右上角账户名的下拉菜单里的 `My Billing Dashboard`，你会重定向到 billing 页面，并可直观看到你即将要付的账单、金额，同一页再往下看是 Alert & Notification，在这里可以设置 Billing 的自动提醒、警告（比如账单一旦超过自定义的阈值或免费资源套餐已用完时就即刻通过电子邮件提醒），还可以设置发送 PDF 发票、存储账单报告到 S3 bucket 里等等。
+
+  
+  
 ## CSAA Test Notes:  
 * CloudWatch Logs help to aggregate, monitor and store logs itself (by installing agent on EC2)  
 * Export to S3, stream to Lambda/ElasticSearch  
