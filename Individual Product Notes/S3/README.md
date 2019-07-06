@@ -121,3 +121,4 @@ awspolicygen.s3.amazonaws.com/policygen.html（这个地址可以通过各种下
 上传代码时，创建过程里的 Set properties 的 Encryption 选项是服务端加密（即与 x-amz-server-side-encription-parameter 相关）。
   
 ### CORS Configuration Lab
+设置适当的 CORS 配置，可以允许一个 S3 bucket 里的文件或程序访问另一个 S3 bucket 里的文件、数据（比如前者的 HTML、JavaScript 程序 Ajax 访问后者的 HTML 文件）。
