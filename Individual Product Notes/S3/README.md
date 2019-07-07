@@ -6,7 +6,7 @@ S3 是一个安全存放文件的地方，它是 Object-based storage（而非 b
   
 ### S3 基础
 * S3 是 Object-based 的，意味着你可以上传、保存文件
-* 保存的单个文件大小限制为：最小为 0 字节，最大至 5 TB
+* 保存的单个文件大小限制为：最小为 0 字节，最大至 5 TB (但是单个 PUT 最大限制是 5 GB)
 * S3 没有存储上限限制
 * 文件存放于 Buckets（AWS 术语，其实与 folder 同义词）中
 * S3 是 universal namespace，即 bucket 名字需全球唯一
@@ -120,5 +120,26 @@ x-amz-server-side-encription-parameter: AES256
 awspolicygen.s3.amazonaws.com/policygen.html（这个地址可以通过各种下拉菜单选择、表格填写，自动方便地生成各种 policy 的 JSON 设置代码）  
 上传代码时，创建过程里的 Set properties 的 Encryption 选项是服务端加密（即与 x-amz-server-side-encription-parameter 相关）。
   
+### CORS
+* 默认情况下，一个 bucket 不能访问另一个 bucket 的文件、数据。
+* 要启用 CORS，需要设置被访问的 bucket 的 CORS 配置以添加访问者（另一个 bucket）的访问允许（这是通过添加 URL 或 IP 到相关 CORS 的配置或 JSON policy 完成的，但在这里的案例里请使用访问者的 S3 website URL 而不是使用常规的 bucket 的 URL）。
+  
 ### CORS Configuration Lab
 设置适当的 CORS 配置，可以允许一个 S3 bucket 里的文件或程序访问另一个 S3 bucket 里的文件、数据（比如前者的 HTML、JavaScript 程序 Ajax 访问后者的 HTML 文件）。
+  
+### S3 性能优化
+S3 支持高频率的请求，你的 S3 bucket 常规下可每秒接收 3500 个 PUT / LIST / DELETE 请求或 5000 个 GET 请求。以下是一些最佳实践方法来优化 S3 的性能。  
+以下基于运行的 workload 类型：  
+* GET-Intensive Workloads - 使用 CloudFront CDN，CloudFront 缓存被访问频率最高的内容、文件、对象，从而减少 GET 请求延迟。
+* Mixed Request Type Workloads - 如对 bucket 的对象进行 GET、PUT、LIST、DELETE 请求，对象的 key name 会对 intensive workloads 性能有影响。S3 基于 key name 来决定哪个分区会被存入该对象，对象使用顺序的 key name 比如 prefix 基于 timestamp 或字母顺序会增加把多个对象存储在同一个分区的可能性，在某些繁重的 workload 情况下这可能会造成 I/O 负担甚至问题。而如果使用随意的 key name prefix，则可以令 S3 把 key 分散到不同的分区从而减少了以上问题（I/O workload）。总结即是尽量避免使用完全的顺序 key name，但是这一优化现在在大部分场景下不再需要，因为 2018 年 S3 的性能有了巨大的提升，使得大部分情况下即使使用完全顺序的 key name 也不会对性能产生太大影响。
+    * Not Optimal Key Name Example:
+        * mybucket/2018-03-04-15-00-00/cust123412/photo1.jpg
+        * mybucket/2018-03-04-15-00-00/cust234234/photo2.jpg
+        * mybucket/2018-03-04-15-00-00/cust345345/photo3.jpg
+    * Optimal Key Name Example (在 Key Name 里增加随机数据，比如 key name 的 prefix 增加使用四字符的十六进制哈希):
+        * mybucket/7eh4-2018-03-04-15-00-00/cust123412/photo1.jpg
+        * mybucket/h35d-2018-03-04-15-00-00/cust234234/photo2.jpg
+        * mybucket/o3n6-2018-03-04-15-00-00/cust345345/photo3.jpg
+  
+### Summery
+https://aws.amazon.com/s3/faqs/
