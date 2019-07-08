@@ -66,7 +66,7 @@ Conditions:
 Mappings: # e.g. set values based on a region
   RegionMap: 
     eu-west-1: 
-      "ami": "ami-Obdb1d6c15a40392c"
+      "ami": "ami-Obdb1d6c15a40392c" # 要根据 Region 配置不同的 AMI ID，若想知道某个 Region 支持的 AMI ID 是多少，可以通过切换 Region，点击 EC2 控制台的 Launch Instance，然后可选的 AMI 列表里就可以看到、复制该 Region 相应 AMI 的 ID 了
 
 Transform: # include snippets of code outside the main template, for example: severless lambda function's code or some other code want to be reused/consistent like create table info for DynamoDB (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/CHAP_TemplateQuickRef.html), these snippets of code can be stored in S3 bucket
   Name: 'AWS::Include'
@@ -97,3 +97,16 @@ Outputs: # 除了 EC2 实例，也可以 output 其他 CloudFormation Stack
     * Mappings - 创建自定义的映射如 Region : AMI（映射不同的 AMI 到不同的 Region，这样可以告诉 AWS 当在某一 Region 工作或运行服务时使用该 Region 映射的 AMI），通常是一个键值哈希。
     * Transform - 引用 S3 里存的代码。
     * Outputs - 该模版执行后的结果。
+  
+### CloudFormation Lab
+创建过程：  
+1. 打开 CloudFormation 控制台
+2. 点击 `创建新的 stack`
+3. 选择创建新的 CloudFormation 模版、AWS 样本模版或复用已有的模版或上传本地的模版文件
+4. 指定、填写 stack 名，传递/选择 Parameters（即上面的 Parameters 项）（如果是设定了 AWS 的资源 Type 如 KeyPair，则可以得到一个下拉列表并选择，列表里的选项都是你的 AWS 平台在该 Region 里已有的数据、资源 -- 在这里就比如已有的 KeyPair）
+5. 更多选项，包括高级设置（比如：一旦新模版部署开通失败则自动回滚）
+6. 再次 review 所有设置，没问题则点击 `创建`，然后需要数分钟等待 stack 部署完成（完成后可点击 `my stack`，可以看到所有的与该 stack 相关的事件，在此处也可以再次检查模版的代码、传入的 Parameters 和 Outputs）
+  
+删除过程：  
+前往 CloudFormation 控制台 -> Stack 列表页面 -> 勾选 stack -> Actions 按钮 -> 删除 stack -> 确定删除 -> 然后等候删除完成即可  
+需要注意的是，在 stack 完成被删除之前，该 stack 相关的 S3 bucket 模版无法删除（因为依赖关系），而 stack 删除之后，该模版也不会自动删除，不过你可以自行手动删除。  
