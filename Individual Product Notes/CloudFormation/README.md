@@ -110,3 +110,28 @@ Outputs: # 除了 EC2 实例，也可以 output 其他 CloudFormation Stack
 删除过程：  
 前往 CloudFormation 控制台 -> Stack 列表页面 -> 勾选 stack -> Actions 按钮 -> 删除 stack -> 确定删除 -> 然后等候删除完成即可  
 需要注意的是，在 stack 完成被删除之前，该 stack 相关的 S3 bucket 模版无法删除（因为依赖关系），而 stack 删除之后，该模版也不会自动删除，不过你可以自行手动删除。  
+  
+除了通过模版，你还可以在 AWS 上以可视化拖拽的形式创建、更新 stack。  
+开通不同的单个 AWS 服务、资源的 stack 的 CloudFormation 模版案例：https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/CHAP_TemplateQuickRef.html  
+  
+### AWS CloudFormation (内置函数) Intrinsic Functions
+AWS CloudFormation 提供这些函数以协助直到在运行时才赋值给模版的属性、参数、变量，从而使得模版更灵活。  
+一些内置函数例子：  
+* Ref（返回指定的 parameter 或 resource 的数值，在 JSON 中唯一不用 `Fn::` 作为前缀的函数，但在 YAML 里和其他内置函数一样要加前缀 `!` 或 `Fn::`）（JSON 用例：{"Ref" : "logicalName"}）
+* FindInMap（在映射中根据键查找相应的值）
+* Base64（对输入的字符串进行 base64 加密，比如给 EC2 的 UserData 传递数据时就需要此加密）（JSON 用例：{"Fn::Base64" : valueToEncode}）
+* Cidr（获取一组 CIDR 网络地址，基于传入的 countValue -- 其范围从 1 至 256）（JSON 用例：{"Fn::Cidr" : [ipBlock, count, cidrBits]}）
+* GetAtt（即 Get Attributes，返回模版里某个 resource 的 attributes，比如某个负载均衡的 DNS 名）（JSON 用例：{"Fn::GetAtt" : ["logicalNameOfResource", "attributeName"]}）
+* GetAZs（返回指定 Region 的 Avaliability Zones 列表、数组）（JSON 用例：{"Fn::GetAZs" : "region"}）
+* ImportValue（返回其他 stack 输出的 Output 值，一般用于创建跨 stack 的引用，比如创建了一组数据库并输出它们的 DNS 名然后接着你的 EC2 可以获取这些数据给另一个 stack 比如 Wordpress 使用）（JSON 用例：{"Fn::ImportValue" : shareValueToImport}）
+* Join（将一组值附加、append 给一个值，以指定分隔符分隔，比如给一组机器 ID 的前缀加上一个环境值如 prod 或 dev）（JSON 用例：{"Fn::Join" : ["delimiter", [comma-delimited list of values]]}）
+* Select（根据索引值 index 从一组对象中返回相应映射的对象）（JSON 用例：{"Fn::Select" : [index, listOfObjects]}）
+* Split（与 Join 相反，可以把一个字符串分解为多个字符串、元素、值，然后从而可以使用 Select 选择其中一个元素）（JSON 用例：{"Fn::Split" : ["delimiter", "source string"]}）
+* Sub（用指定数值替代一个字符串的输入变量，比如一个字符串需要 VPC name，可以用 Sub 在 VPC 创建好后的 name 加入）（JSON 用例：{"Fn::Sub" : [String, {Var1Name: Var1Value, Var2Name: Var2Value}]}）
+* Transform（在 stack 的模版里，指定一个 macro 去执行自定义的处理多个部分，比如可以替你在模版里进行 Find and Replace 操作）（JSON 用例：{"Fn::Transform" : {"Name" : macro name, "Parameters" : {key : value, ...}}}）
+还有以下内置的条件函数（可以让你基于条件创建、更新 stack 资源，并通过你在创建、更新 stack 时声明的 input parameters 来判断）：  
+* Fn::And
+* Fn::Equals
+* Fn::If
+* Fn::Not
+* Fn::Or
