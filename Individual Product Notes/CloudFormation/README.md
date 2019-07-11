@@ -135,3 +135,91 @@ AWS CloudFormation 提供这些函数以协助直到在运行时才赋值给模�
 * Fn::If
 * Fn::Not
 * Fn::Or
+条件函数用法可参考：https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-sample-templates.html  
+  
+  
+  
+### AWS CloudFormation Wait Conditions
+  
+#### DependsOn
+用于控制 CloudFormation 里的资源的创建顺序  
+```yaml
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId: "ami-Obdb1d6c15a40392c"
+    DependsOn: GatewayToInternet
+
+GatewayToInternet:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties: 
+    VpcId: 
+      Ref: VPC
+    InternetGatewayId:
+      Ref: InternetGateway
+```
+以上 EC2 会等待 CloudFormation 返回报告依赖已就绪（大部分时候这很安全，但是也有些时候依赖就绪不代表依赖内部所有配置设置都完成了，因此接下来引入 creation policies）  
+  
+#### Creation Policies
+指定 CloudFormation 收到指定（数量）的成功信号或等待到了指定 timeout 时间前不能让某资源状态达到`创建完成`。  
+```yaml
+CreationPolicy:
+  ResourceSignal:
+    Count: '3'
+    Timeout: PT15M
+```
+Here is UserData attached to your EC2 instance（如上所写，需要以下 cfn-signal 命令运行三次）:  
+```bash
+yum update -y aws-cfn-bootstrap 
+/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource AutoScalingGroup --region ${AWS::Region}
+```
+以上总结就是需要等待 3 个 EC2 实例 setup 完成（发送 3 次完成信号），CloudFormation 才继续往下着手创建其他依赖于它们的资源、stack。
+  
+#### Wait Conditions & Handlers
+* 用来让你协调其他 stack 的配置动作与某个 stack 资源创建，这些配置动作与该 stack 无直接关系
+* 允许你跟踪配置过程的状态
+* Wait Condition Handles 是可以生成安全签名（signed）URL 的无属性资源，用于通信
+* Wait Condition 有以下 4 个组件：
+    * DependsOn
+    * 上面提及的 Handle
+    * 响应 timeout
+    * count（前面提及的成功信号指定数），默认是 1
+  
+#### Wait Conditions & Handlers 用例
+```yaml
+# Wait Condition Handle，会有一个预先签名的 URL 被创建
+WaitHandle:
+  Type: AWS::CloudFormation::WaitConditionHandle
+
+# Wait Condition
+WaitCondition:
+  Type: AWS::CloudFormation::WaitCondition
+  DependsOn: "WebServerGroup"
+  Properties: 
+    Handle: 
+      Ref: "WaitHandle"
+    Timeout: "300"
+    Count:
+      Ref: "WebServerCapacity"
+
+# Resource
+WebServerGroup:
+  Type: AWS::AutoScaling::AutoScalingGroup
+  Properties:
+  LaunchConfigurationName:
+    Ref: "LaunchConfig"
+  MinSize: "1"
+  MaxSize: "5"
+  DesiredCapacity:
+    Ref: "WebServerCapacity"
+  LoadBalancerNames:
+    -
+      Ref: "ElasticLoadBalancer"
+```
+  
+#### Wait Conditions & Handlers 与 Creation Policies 对比
+* 为什么 Wait Conditions & Handlers 与 Creation Policies 不同
+* 有了 Conditions 你可以实现更复杂的服务、资源开通顺序，Wait Conditions 可以依赖于许多资源，也有许多资源可以依赖于它
+* 你可以对那些使用 WaitConditions（带有 DependsOn 的）的东西的顺序造成影响
+* 额外的数据可以通过 Wait Conditions Handlers 创建的签名 URL 传出、返回，然后可以在模版内被访问到
