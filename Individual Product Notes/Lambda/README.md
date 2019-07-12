@@ -58,3 +58,10 @@ Make an Alexa Skill Lab:
 3. Copy the created Lambda ARN, open / login Alexa official web console, create new Fact skill and paste the ARN to Endpoint -> AWS Lambda ARN, set utterance to trigger that Lambda, click "build model".  
 4. Know can online test or really talk to Alexa with that command / utterance to trigger and hear that mp3 sound.
   
+  
+  
+## 实践
+2019 年 AWS 官方文档资料（Lambda 请求参数负载限制）：  
+如果是 API Gateway 调用 lambda function (默认设置即不强制使用 asynchronous invocation; 如果想强制设置请参考: https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/set-up-lambda-integration-async.html, 同时这也是检查是否被设置的方法), 则 API Gateway 请求数据大小限制是 `10 MB` 而 Lambda 请求负载数据限制是 `6 MB` (包括 HTTP/HTTPS 的 headers, authorization 等等)。  
+而大部分 event drive 的 Lambda function, 比如 S3 trigger 则是 asynchronous invocation, 而此时相关 Lambda function 的请求负载数据限制是 `256 KB`。  
+参考：https://www.stackery.io/blog/RequestEntityTooLargeException-aws-lambda-message-invocation-limits/

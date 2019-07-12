@@ -223,3 +223,24 @@ WebServerGroup:
 * 有了 Conditions 你可以实现更复杂的服务、资源开通顺序，Wait Conditions 可以依赖于许多资源，也有许多资源可以依赖于它
 * 你可以对那些使用 WaitConditions（带有 DependsOn 的）的东西的顺序造成影响
 * 额外的数据可以通过 Wait Conditions Handlers 创建的签名 URL 传出、返回，然后可以在模版内被访问到
+  
+### 什么是 nested（嵌套）stack
+比如 stack 包含一组资源（如 S3 bucket、EC2 实例等等）。有了嵌套，定义好的一个 stack 也可以作为一个资源，嵌套 stack 本身可以再嵌套 stack（多重嵌套）。  
+好处：  
+* 可以把一个巨大复杂的基础设施定义、声明、结构分解为多个模版而不是一个模版。
+* CloudFormation 的单个 stack 有限制：200 个资源、60 个 outputs 和 60 个 parameters，通过嵌套你就可以绕过这些限制。
+* 这可以使得基础架构即代码 (IaC)更有效和复用性更好。
+  
+用例：  
+```yaml
+Type: AWS::CloudFormation::Stack
+Properties: 
+  NotificationARNs: # The Simple Notification Service (SNS) topic ARNs to publish stack related events
+    - String
+  Parameters: # The set value pairs that represent the parameters passed to CloudFormation when this nested stack is created. AWS CloudFormation Stack Parameters
+    Key : Value
+  Tags: # Key-value pairs to associate with this stack. AWS CloudFormation also propagates these tags to the resources created in the stack.
+    - Resource Tag
+  TemplateURL: String # Location of file containing the template body. The URL must point to a template (max size: 460,800 bytes) that is located in an Amazon S3 bucket.
+  TimeoutInMinutes: Integer
+```
