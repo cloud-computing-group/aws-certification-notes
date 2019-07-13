@@ -10,13 +10,13 @@ Terms:
 3. Stack Policy (IAM style policy statement which governs what can be changed and who can change it.)
   
 ### CloudFormation 简介
-* CloudFormation 服务可以让你通过代码来管理、配置、开通你的 AWS 基础设施服务。
+* CloudFormation 服务可以让你通过代码来管理、配置、开通你的 AWS 基础架构（或者说基础设施）服务。
 * 资源通过 CloudFormation 代码模版来定义、声明。
 * CloudFormation 会解释该代码模版从而调用相应的 AWS API 来创建、更新被定义、声明的资源。
 * 该模版支持 YAML 或 JSON 格式。
   
 ### CloudFormation 优点
-* 基础设施、服务、资源保证了更一致性地开通、创建、更新，从而减少了（基于人的手动工作的）错误。
+* 基础架构、服务、资源保证了更一致性地开通、创建、更新，从而减少了（基于人的手动工作的）错误。
 * 相比手动配置以上设施、服务、资源，花费更少的时间、精力。
 * 可以进行版本控制（比如 git）以及模版代码能方便他人评审检错。
 * 免费使用（当然被创建的资源还是要按自己原来的价格收费）。
@@ -30,7 +30,7 @@ Terms:
 注意：CloudFormation 模版应该很好地设计以适用于多个 Region 且规模至 1100 或 1000 个应用的适用场景（使用尽可能少的变量以减少可能的冲突）。  
   
 ### CloudFormation 模版
-* 使用 YAML 或 JSON 模版描述基础设施的服务开通或更新的结束状态。
+* 使用 YAML 或 JSON 模版描述基础架构的服务开通或更新的结束状态。
 * 创建或更新完模版后，通过上传至 S3 bucket 从而可以将其上传给 CouldFormation。
 * CloudFormation 读取模版（从相关 S3 bucket）并为你调用相关 AWS API 调动 AWS 资源。
 * 其所有的被调动、更改的资源被总称为一个 `Stack` 或 `CloudFormation Stack`。
@@ -89,7 +89,7 @@ Outputs: # 除了 EC2 实例，也可以 output 其他 CloudFormation Stack
 * `Transform` 项用来引用 CloudFormation 模版之外的代码，这些可复用代码将存入 S3 中，比如：Lambda 的代码或其 template snippets，又或者可复用的 CloudFormation 模版代码片段。
   
 ### Exam Tips
-* CloudFormation 让你可以通过代码（YAML 或 JSON 格式）来管理、配置、服务开通 AWS 的基础设施。
+* CloudFormation 让你可以通过代码（YAML 或 JSON 格式）来管理、配置、服务开通 AWS 的基础架构。
 * CloudFormation 模版里各项的作用：
     * Parameters - 引入自定义的值（还可以通过 UI、CLI 或 API 传递这些值给模版）。
     * Conditions - 比如：根据环境开通（相应）服务。
@@ -128,7 +128,8 @@ AWS CloudFormation 提供这些函数以协助直到在运行时才赋值给模�
 * Select（根据索引值 index 从一组对象中返回相应映射的对象）（JSON 用例：{"Fn::Select" : [index, listOfObjects]}）
 * Split（与 Join 相反，可以把一个字符串分解为多个字符串、元素、值，然后从而可以使用 Select 选择其中一个元素）（JSON 用例：{"Fn::Split" : ["delimiter", "source string"]}）
 * Sub（用指定数值替代一个字符串的输入变量，比如一个字符串需要 VPC name，可以用 Sub 在 VPC 创建好后的 name 加入）（JSON 用例：{"Fn::Sub" : [String, {Var1Name: Var1Value, Var2Name: Var2Value}]}）
-* Transform（在 stack 的模版里，指定一个 macro 去执行自定义的处理多个部分，比如可以替你在模版里进行 Find and Replace 操作）（JSON 用例：{"Fn::Transform" : {"Name" : macro name, "Parameters" : {key : value, ...}}}）
+* Transform（在 stack 的模版里，指定一个 macro 去执行自定义的处理多个部分，比如可以替你在模版里进行 Find and Replace 操作）（JSON 用例：{"Fn::Transform" : {"Name" : macro name, "Parameters" : {key : value, ...}}}）  
+  
 还有以下内置的条件函数（可以让你基于条件创建、更新 stack 资源，并通过你在创建、更新 stack 时声明的 input parameters 来判断）：  
 * Fn::And
 * Fn::Equals
@@ -227,7 +228,7 @@ WebServerGroup:
 ### 什么是 nested（嵌套）stack
 比如 stack 包含一组资源（如 S3 bucket、EC2 实例等等）。有了嵌套，定义好的一个 stack 也可以作为一个资源，嵌套 stack 本身可以再嵌套 stack（多重嵌套）。  
 好处：  
-* 可以把一个巨大复杂的基础设施定义、声明、结构分解为多个模版而不是一个模版。
+* 可以把一个巨大复杂的基础架构定义、声明、结构分解为多个模版而不是一个模版。
 * CloudFormation 的单个 stack 有限制：200 个资源、60 个 outputs 和 60 个 parameters，通过嵌套你就可以绕过这些限制。
 * 这可以使得基础架构即代码 (IaC)更有效和复用性更好。
   
@@ -243,4 +244,138 @@ Properties:
     - Resource Tag
   TemplateURL: String # Location of file containing the template body. The URL must point to a template (max size: 460,800 bytes) that is located in an Amazon S3 bucket.
   TimeoutInMinutes: Integer
+```
+  
+### 资源删除 policies
+* 与 CloudFprmation 模版里每个资源相关的
+* 一种决定资源在 stack 被删除后的去留处理的控制方式
+* policy 选项包括：
+    * Delete（默认，即 stack 被删除则相关资源自动都被删除）
+    * Retain（即 stack 删除后资源仍被保留甚至运行，除非你在 AWS 平台上手动删除它们）
+    * Snapshot（比如 EC2、RDS 实例、Redshift 集群等等，备份资源及其数据的快照然后删除资源实体，用例比如不想有服务运行的费用同时可以按需保留之前的服务如数据库里的数据）  
+用例：  
+```yaml
+myS3Bucket:
+  Type: "AWS::S3::Bucket"
+  DeletionPolicy: Retain
+```
+  
+### Stack 更新
+当更新 stack 时，正在发生：
+* 该 stack policy 检查（该操作者是否有权限更新）
+* 更新 orchestrated（基础架构的编排）  
+Stack policy 例子（允许更新任何设施除了某个资源的数据库）：  
+```json
+{
+  "Statement" : [
+    {
+      "Effect" : "Allow",
+      "Action" : "Update:*",
+      "Principal": "*",
+      "Resource" : "*"
+    },
+    {
+      "Effect" : "Deny",
+      "Action" : "Update:*",
+      "Principal": "*",
+      "Resource" : "LogicalResourceId/ProductionDatabase"
+    }
+  ]
+}
+```
+更多：  
+* 没有任何 policy，则默认允许更新所有资源
+* 一旦 policy 被 apply 就不能删除
+* 一旦 policy 被 apply 则默认所有对象不允许更新（如果想让更新进行，则要明确指定某个对象比如通过ID指定）  
+```json
+{
+  "Statement" : [
+    {
+      "Effect" : "Allow",
+      "Action" : "Update:*",
+      "Principal": "*",
+      "Resource" : "*"
+    },
+  ]
+}
+```
+  
+### 资源 Impacts
+* 更新过程中，实际发生的具体更新是基于资源或是其属性，有 4 种可能的 impacts：
+    * 服务运行完全不打断（Interruption）（比如 DynamoDB Table 的 ProvisionedThroughput 更新）
+    * 部分服务运行打断（如某些服务停止、重启，比如更新 EC2 实例的 Instance Type）
+    * 替换（服务整个替换掉即删除后再重新创建，比如更新 EC2 实例的 Availability Zone）
+    * 删除（服务整个删除）  
+AWS CloudFormation 的官方文档的每个服务的属性都会有详细介绍其 Update Type 和 Impacts。  
+  
+### Custom Resource（自定义资源）
+Custom Resource 让你可以在模版里写入 custom provisioning 逻辑，从而扩展 CloudFormation 适用于 AWS 之外的资源（如外部 API）又或者是尚未获得 CloudFormation 支持的 AWS 资源。  
+#### How it works
+1. 模版开发者 - 创建自定义资源类型的模版，同时定义了服务的 token 以及允许输入参数、数据。
+2. 自定义资源 provider - 拥有该自定义资源并知道如何处理、响应来自 CloudFormation 的请求，且必须提供给开发者其服务的 token。
+3. AWS CloudFormation - 发送请求（以及 token）至资源 provider，等待处理、响应完成后再进行 stack 的下一步操作。  
+用例：  
+Information：  
+* 使用一个 Lambda function
+* Lambda 获取最新的 AMI ID 以创建一个 EC2 实例
+* 创建了一个 stack，包括：
+    * 该 Lambda function
+    * 一个 IAM role
+    * 一个自定义资源
+    * 一个 EC2 资源  
+```yaml
+AMIInfoFunction: 
+  Type: "AWS::Lambda::Function"
+  Properties: 
+  Code:
+    S3Bucket: !Ref S3Bucket
+    S3Key: !Ref Key
+  FunctionName: String
+  Handler: !Sub "${ModuleName}.handler"
+  Runtime: nodejs4.3
+  Role: !GetAtt LambdaExecutionRule.Arn
+  Timeout: 30
+```
+```yaml
+LambdaExecutionRole:
+  Type: AWS::IAM::Role
+  Properties:
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+      - Effect: Allow
+        Principal:
+          Service:
+          - lambda.amazonaws.com
+        Action:
+        - sts:AssumeRole
+    Path: "/"
+    Policies:
+    - PolicyName: root
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - logs:*
+          Resource: arn:aws:logs:*:*:*
+```
+```yaml
+AMIInfo:
+  Type: Custom::AMIInfo
+  Properties:
+    ServiceToken: !GetAtt AMIInfoFunction.Arn
+    Region: !Ref "AWS::Region"
+    Architecture:
+      Fn::FindInMap:
+      - AWSInstanceType2Arch
+      - !Ref InstanceType
+      - Arch
+```
+```yaml
+SampleInstance:
+  Type: AWS::EC2:Intance
+  Properties:
+    InstanceType: !Ref IntanceType
+    ImageId: !FetAtt AMIInfo.Id
 ```
