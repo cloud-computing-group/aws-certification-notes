@@ -14,7 +14,7 @@ Lambda是 AWS 提供的只需按使用的计算时间付费的可运行开发者
   
 ### Price
 基于两个因素：
-1. 请求量（request）- 每年的前100万次请求免费。
+1. 请求量（request）- 每月的前100万次请求免费。
 2. 单次处理耗费资源（duration）- 每次请求总处理时间大概会控制为100ms，因此若程序要处理的是较为繁重的计算时就会消耗更多的内存，因此最后将以 GB/sec 为计量单位计算费用。(对于繁重的计算任务，需要更多的内存，因此内存可能要配置提升，如果超过配置的内存处理可能会失败)
   
 ### Exam Tips
@@ -56,7 +56,15 @@ Make an Alexa Skill Lab:
 1. Create S3 Bucket for store mp3 files, go to AWS Polly service and upload some text, then click generate speech (mp3 file) and send to the S3 bucket (config the url in AWS Polly service).  
 2. Create a Lambda to respond a Alexa command / utterance (there is public Lambda code available on AWS Lambda blueprint for free, just create Lambda function based on the blueprint), in the code can change "data" variable point to the S3 bucket's mp3 file's url.  
 3. Copy the created Lambda ARN, open / login Alexa official web console, create new Fact skill and paste the ARN to Endpoint -> AWS Lambda ARN, set utterance to trigger that Lambda, click "build model".  
-4. Know can online test or really talk to Alexa with that command / utterance to trigger and hear that mp3 sound.
+4. Know can online test or really talk to Alexa with that command / utterance to trigger and hear that mp3 sound.  
+  
+### 触发源
+包括但不限于：  
+* S3 bucket（Event Type 可以是PUT、POST、COPY etc，还可以指定触发必须是 bucket 的某个 directory 下或者 bucket 存储的某类文件类型）
+* DynamoDB table
+* Kinesis Stream
+* SQS notification
+* API Gateway
   
   
   

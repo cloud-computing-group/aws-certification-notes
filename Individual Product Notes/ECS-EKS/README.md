@@ -24,3 +24,46 @@ KMS 可以为 ECS 提供密钥管理服务。
 * 在集群上管理容器
 * 支持 API 调用（比如启动、停止某个容器应用）
 * 支持 Scheduling
+  
+Architecture of ECS objects:  
+```json
+[
+    {
+        "Cluster": [
+            {
+                "Service": {
+                    "Task Definition": [
+                        {
+                            "Container Definition": {
+                                "Container Name": "String",
+                                "Image": "String",
+                                "Memory Limits": "Int",
+                                "Port mapping": "Int"
+                            }
+                        },
+                        {
+                            "Container Definition": []
+                        }
+                    ]
+                }
+            },
+            {
+                "Service": []
+            }
+        ]
+    },
+    {
+        "Cluster": []
+    }
+]
+```
+* Container Definition - 为容器选择或自定义一个镜像。
+* Task Definition - 应用的蓝图，包括一个或多个容器，声明的属性有些是全 task 的，但大多数属性是每个容器有单独配置的。
+* Service - 一个 Service 可以让你在一个 Cluster（集群）里同时运行一个 task 的一个或多个实例。（这里可以设置负载均衡，设置好后会返回负载均衡的IP地址）。
+* Cluster（集群） - 基础设施（比如一堆开发者自己管理、配置的 EC2 实例以及网络，如果是 Fargate 集群的话则完全有 AWS 自动管理）。  
+https://docs.aws.amazon.com/zh_cn/AmazonECS/latest/developerguide/ECS_clusters.html  
+https://docs.aws.amazon.com/zh_cn/AmazonECS/latest/developerguide/ecs_services.html  
+https://docs.aws.amazon.com/zh_cn/AmazonECS/latest/developerguide/task_definitions.html  
+
+集群 Dashboard：  
+列出 Services 列表，可以查看单个 Service。Service 里有 Tasks（比如正在运行的 Task），Event（比如 Service 状态更新），Deployment，Metrics，Logs（比如来自 ELB health check 的 HTTPS 请求）  
