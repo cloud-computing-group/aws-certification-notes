@@ -332,7 +332,7 @@ AMIInfoFunction:
     S3Key: !Ref Key
   FunctionName: String
   Handler: !Sub "${ModuleName}.handler"
-  Runtime: nodejs4.3
+  Runtime: nodejs8.10
   Role: !GetAtt LambdaExecutionRule.Arn
   Timeout: 30
 ```
