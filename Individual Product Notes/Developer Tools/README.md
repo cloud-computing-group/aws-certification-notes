@@ -1,6 +1,7 @@
 ### CodeCommit
-AWS 提供的 Source Control 服务，用于创建 repo 等等，可以设置使用 git，设置多与 GitHub 相似比如创建 credential 用于 git 命令链接到你的代码仓库，具体需要到 IAM 到具体 User 下的 credential 创建页面（该 User 需先获得/添加 CodeCommit 整体的访问权限 - AWSCodeCommitFullAccess，具体需设置 IAM policy），最下方有创建 CodeCommit 的 git credential 选项（即获取一对账号与密码，就如普通 IAM 用户设置 credential 那般）。  
-也可以返回代码仓库地址方便你 git clone（clone 时需要输入上面的 credential）。然后剩下的就是本地使用 git 一样，写代码然后 add、commit、push（第一次 push 也需要输入一次刚刚的 credential，应该是检查你是否有写权限）等等。  
+AWS 提供的 Source Control 服务，用于创建 repo 、存放代码、二进制文件、图片、库等等，可以设置使用 git（完整支持），设置多与 GitHub 相似比如创建 credential 用于 git 命令链接到你的代码仓库，具体需要到 IAM 到具体 User 下的 credential 创建页面（该 User 需先获得/添加 CodeCommit 整体的访问权限 - AWSCodeCommitFullAccess，具体需设置 IAM policy），最下方有创建 CodeCommit 的 git credential 选项（即获取一对账号与密码，就如普通 IAM 用户设置 credential 那般）。  
+也可以返回代码仓库地址方便你 git clone（clone 时需要输入上面的 credential）(git clone 与 Github 一样可以选 HTTPS 或 SSH，在 Connection Steps 里选)。然后剩下的就是本地使用 git 一样，写代码然后 add、commit、push（第一次 push 也需要输入一次刚刚的 credential，应该是检查你是否有写权限）等等（除了本地编码然后 push，你也可以和 GitHub 一样在 CodeCommit 上创建和编码、编辑文件，除此之外还可以和 GitHub 一样在网页上创建分支、提交 PR 等等）。  
+在数据传输过程（HTTPS/SSH）中已加密。因此安全且高度可扩展。另外还可以设置 SNS 提示以检查任何 CodeCommit 的事件（比如有人提交 PR）。  
   
 ### CodeBuild
 * 一个完整管理的 build 服务
@@ -34,7 +35,13 @@ AWS 管理的部署服务，可自动部署代码、文件至：
 4. 选择 deployment 组，选择 Role（前面的 IAM Role），部署类型（In-place 或 Blue/green），环境设置（此案例选择 Auto Scaling Group，即部署至此 Auto Scaling Group 后面的 EC2 实例），设置/选择负载均衡（此案例为前面的 ELB/ALB），完成创建 deployment 组
 5. Create deployment（revision type 可以是 GitHub 但此案例为 S3 bucket，即要部署的代码、文件源），点击开始部署，等待完成，这个过程可以监控查看部署过程的所有事件
 6. （设置好 DNS 给 ELB 后）浏览器访问 ELB 地址，就可以看到被部署的 web 应用、程序运行并显示网站了  
-PS：案例里在部署的代码里的 appspec.yml（deployment process 相关的 yml 文件）写了在实例运行或终止时运行或终止 nginx 的配置文件、脚本，因此才能显示、托管上面的 web 应用。(https://docs.aws.amazon.com/zh_cn/codedeploy/latest/userguide/reference-appspec-file.html)  
+PS：  
+可以与其他 CICD 工具（如 Jenkins、Atlassian）以及配置管理工具（如 Ansible、Puppet、Chef）集成。  
+案例里在部署的代码里的 appspec.yml（deployment process 相关的 yml 文件）写了在实例运行或终止时运行或终止 nginx 的配置文件、脚本，因此才能显示、托管上面的 web 应用。(https://docs.aws.amazon.com/zh_cn/codedeploy/latest/userguide/reference-appspec-file.html)  
+  
+考点：  
+In-Place 与 Blue/green 部署：https://docs.aws.amazon.com/zh_cn/codedeploy/latest/userguide/deployments.html  
+In-Place 只支持 EC2 和 On-premise，不支持 Lambda。  
   
 ### CodePipeline
 AWS 自动管理的 CD 服务，即 CodeCommit -> CodePipeline，它全自动、易用、可配置（添加自动测试、自定义部署过程）。  
