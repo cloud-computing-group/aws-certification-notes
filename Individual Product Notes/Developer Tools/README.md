@@ -39,9 +39,17 @@ PS：
 可以与其他 CICD 工具（如 Jenkins、Atlassian）以及配置管理工具（如 Ansible、Puppet、Chef）集成。  
 案例里在部署的代码里的 appspec.yml（deployment process 相关的 yml 文件）写了在实例运行或终止时运行或终止 nginx 的配置文件、脚本，因此才能显示、托管上面的 web 应用。(https://docs.aws.amazon.com/zh_cn/codedeploy/latest/userguide/reference-appspec-file.html)  
   
+一些用语：  
+* Deployment Group - 新开通的用于搭载新版本应用、程序的实例们。
+* Deployment Configuration - 一组部署 rules 以及在部署中使用的成功、失败条件。
+* AppSpec File - 定义你希望 AWS CodeDeploy 执行的部署动作。
+* Revision - 部署新版本需要的所有东西：比如 AppSpec File、应用文件、可执行文件、配置文件等等。
+* Application - 你想部署的唯一标识的应用。用来确定正确的 revision 组合、部署配置以及目标 deployment group。
+  
 考点：  
 In-Place 与 Blue/green 部署：https://docs.aws.amazon.com/zh_cn/codedeploy/latest/userguide/deployments.html  
-In-Place 只支持 EC2 和 On-premise，不支持 Lambda。  
+In-Place（或称 Rolling Update） 只支持 EC2 和 On-premise，不支持 Lambda。更新程序、应用的策略是现在全部硬件上的程序、应用按顺序一一停止（暂停服务且应预先设置负载均衡策略跳过这个硬件与应用，这意味着此时 capacity reduce 了）并更新（前一个完成更新并重新运行、上线后再停止并更新下一个）。Rollback 则要求 re-deploy 旧版本，所以要花些时间。  
+Blue/green 服务开通新的硬件并跑上新版本的程序、应用，根据你设置的 schedule 策略逐渐把旧硬件上的旧应用服务的流量切换、导向新硬件与新应用（流量切换由负载均衡负责），所以旧硬件旧应用完全不受影响，完成后把所有旧硬件关停删除。Rollback 非常简单只需把流量导回原先的旧硬件、应用上（如果旧硬件们还未删除则直接用旧硬件群 Blue，否则开新的硬件群 green 以搭载旧版本应用）。支持 EC2、On-premise 以及 Lambda。（所以 Blue/green 相比 In-Place 更快且更稳定。这里 Blue 即是当前、旧版本的部署，green 则是新版本、新发布的部署）  
   
 ### CodePipeline
 AWS 自动管理的 CD 服务，即 CodeCommit -> CodePipeline，它全自动、易用、可配置（添加自动测试、自定义部署过程）。  
