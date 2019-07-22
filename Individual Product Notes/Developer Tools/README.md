@@ -75,3 +75,5 @@ AWS 自动管理的 CICD 服务，它全自动、易用、可配置（添加自�
 2. 更新、设置 build 完成之后 Artifacts 放置的路径（比如 S3 bucket，但 S3 可能不安全因此需注意 policy 以及 ACL 等等），还可以选择压缩、加密 Artifacts 文件
 3. 还可以选择不输出 Artifacts 文件，而是创建一个 Docker 容器镜像放置在 AWS ECR 上以便让 ECS 使用  
 PS：AWS 平台本身有个服务叫 AWS Artifact（该服务提供按需访问一些 AWS 的 compliance 报告），与这个 Artifacts 没有任何关系。  
+  
+### AppSpec

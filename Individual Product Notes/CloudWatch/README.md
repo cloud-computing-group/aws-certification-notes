@@ -51,7 +51,11 @@ CloudWatch - Dashboards are multi-region and can display any widget to any regio
   
 ### Create A Billing Alarm
 无所谓哪个 region, 点击右上角账户名的下拉菜单里的 `My Billing Dashboard`，你会重定向到 billing 页面，并可直观看到你即将要付的账单、金额，同一页再往下看是 Alert & Notification，在这里可以设置 Billing 的自动提醒、警告（比如账单一旦超过自定义的阈值或免费资源套餐已用完时就即刻通过电子邮件提醒），还可以设置发送 PDF 发票、存储账单报告到 S3 bucket 里等等。
-
+  
+### CloudWatch vs CloudTrail vs Config
+* CloudWatch 监控性能如 CPU、网络等等
+* CloudTrail 监控 AWS 平台收到的 API 请求、调用（资源、服务开通等等，用于审计）
+* AWS Config 更像一个 CCTV，记录了你的 AWS 环境的状态，可以在状态有变更时通知你
   
   
 ## CSAA Test Notes:  

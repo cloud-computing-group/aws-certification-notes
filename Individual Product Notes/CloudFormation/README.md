@@ -379,3 +379,13 @@ SampleInstance:
     InstanceType: !Ref IntanceType
     ImageId: !FetAtt AMIInfo.Id
 ```
+  
+### Serverless Application Model (SAM)
+* SAM 是 CloudFormation 的一个延伸，用来定义无服务应用
+* 简易的语法来定义无服务资源：APIs、Lambda 函数、DynamoDB 表 等等
+* 使用 SAM CLI 来打包你准备部署的代码，上传代码至 S3 上并部署你的无服务应用  
+  
+使用 SAM CLI 命令来打包及部署：  
+* sam package - 打包你的应用并上传至 S3 bucket
+* sam deploy - 通过 CloudFormation 部署你的无服务应用  
+使用参考：https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html
