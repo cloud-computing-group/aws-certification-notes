@@ -1,0 +1,23 @@
+1) Pre-requisties: After installing Python 3.x, install pip and the SAM CLI:
+easy_install pip 
+pip install aws-sam-cli
+
+
+2) Create an S3
+bucket: aws s3 mb s3://cfsambucket --region eu-west-2  #use the bucket name and region name of your choice - it must match the default region that you are working in. 
+
+3) Package your deployment: 
+
+sam package \
+--template-file ./lambda.yml \
+--output-template-file sam-template.yml \
+--s3-bucket cfsambucket
+
+#use the bucket name you used in the previous step
+
+4) Deploy your package: 
+
+sam deploy \
+--template-file sam-template.yml \
+--stack-name mystack \
+--capabilities CAPABILITY_IAM

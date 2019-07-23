@@ -231,6 +231,8 @@ WebServerGroup:
 * 可以把一个巨大复杂的基础架构定义、声明、结构分解为多个模版而不是一个模版。
 * CloudFormation 的单个 stack 有限制：200 个资源、60 个 outputs 和 60 个 parameters，通过嵌套你就可以绕过这些限制。
 * 这可以使得基础架构即代码 (IaC)更有效和复用性更好。
+* 适用于频繁使用的配置资源如：负载均衡、web 或应用的服务器。
+* 嵌套 stack 的 CloudFormation 模版可以保存在 S3 上，然后可以在其他 CloudFormation 模版中通过设为 Stack 资源类型进行引用。  
   
 用例：  
 ```yaml
@@ -388,4 +390,9 @@ SampleInstance:
 使用 SAM CLI 命令来打包及部署：  
 * sam package - 打包你的应用并上传至 S3 bucket
 * sam deploy - 通过 CloudFormation 部署你的无服务应用  
-使用参考：https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html
+使用参考：https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html  
+  
+在本路径 ./sam example/ 里，包含以下文件：  
+* index.js - Lambda 函数的主要程序代码
+* lambda.yml - 告诉 CloudFormation 使用 SAM
+* sam-template.yml - CloudFormation 模版

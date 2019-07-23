@@ -77,3 +77,39 @@ AWS 自动管理的 CICD 服务，它全自动、易用、可配置（添加自�
 PS：AWS 平台本身有个服务叫 AWS Artifact（该服务提供按需访问一些 AWS 的 compliance 报告），与这个 Artifacts 没有任何关系。  
   
 ### AppSpec
+这个文件是用来定义 CodeDeploy 部署时的参数。文件结构取决于你是部署至 Lambda 还是 EC2 / On Premises。  
+  
+#### AppSpec Lambda
+如果是 Lambda 部署，AppSpec 文件的数据格式应是 YAML 或 JSON，且包括以下字段：  
+* version - 可能在未来用上的保留关键字，目前只有一个值即 0.0
+* resources - 部署的 Lambda 函数的名字以及属性
+* hooks - 部署时指定 Lambda 函数运行在设定点上以验证部署，比如在新部署上线前保证测试、验证通过。  
+AppSpec File - Hooks - Lambda：  
+* BeforeAllowTraffic - 用来指定在部署正式上线前你想执行的任务或函数（如测试验证函数被正确部署）
+* AfterAllowTraffic - 用来指定在部署正式上线后你想执行的任务或函数（如测试验证函数正确地接收请求、流量并如预期响应、处理）  
+  
+#### AppSpec EC2 / On Premises
+如果是 EC2 / On Premises 部署，包括以下字段：  
+* version - 可能在未来用上的保留关键字，目前只有一个值即 0.0
+* os - 操作系统及版本你想运行在服务器上（比如 Linux、Windows）
+* files - 应用文件应该存放在服务器上的位置、路径
+* hooks -   生命周期事件 hooks，允许你在部署生命周期中指定将在设定点运行的脚本（比如在部署前解压应用文件、在新部署应用上运行函数测试、在负载均衡上取消或重新注册服务器实例）  
+在 EC2 / On Premises，AppSpec File 必须放置在上传的应用文件的根路径上。  
+  
+AppSpec File - Hooks - EC2 / On Premises（以下顺序是按生命周期排序的 - Run Oder of Hooks）：  
+* BeforeBlockTraffic - 在实例在负载均衡取消注册前，在实例上运行任务
+* BlockTraffic - 从负载均衡上取消注册实例
+* AfterBlockTraffic - 在实例在负载均衡取消注册后，在实例上运行任务
+* ApplicationStop - 渐停应用以准备部署新的版本
+* DownloadBundle - CodeDeploy Agent 下载新版本文件到服务器临时路径
+* BeforeInstall - 安装的前置脚本、动作（比如备份旧版本、文件解码）
+* Install - CodeDeploy Agent 将下载到临时路径的新版本文件转到服务器安装路径
+* AfterInstall - 安装后脚本，比如配置任务、更改文件权限
+* ApplicationStart - 重启那些在 ApplicationStop 过程中被停的服务
+* ValidateService - 测试、验证服务的细节、信息
+* BeforeAllowTraffic - 在实例被注册到负载均衡之前运行的任务、动作
+* AllowTraffic - 在负载均衡上注册实例
+* AfterAllowTraffic - 在实例被注册到负载均衡之后运行的任务、动作
+  
+  
+### Docker and CodeBuild Lab
