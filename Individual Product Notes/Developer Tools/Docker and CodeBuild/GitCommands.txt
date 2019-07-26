@@ -1,0 +1,10 @@
+Use the following commands to connect to your codecommit repo and clone it locally: 
+
+1) Set Up the Credential Helper
+git config --global credential.helper '!aws codecommit credential-helper $@'
+git config --global credential.UseHttpPath true
+
+2) Clone the repository with the git clone command:
+git clone https://git-codecommit.eu-central-1.amazonaws.com/v1/repos/mysourcecoderepo
+
+#Make sure you replace my clone url with your own!

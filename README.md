@@ -6,7 +6,7 @@ aws-cloud-best-practices 至 P5/P42
 
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
-AWS Certified Developer Associate 至 `Beginners Guide to EC2 / EC2 101`，已完成章节 `S3` 和 `Introduction to Serverless Computing`  
+AWS Certified Developer Associate 至 `Beginners Guide to EC2 / EC2 101`，已完成章节 `S3` `Introduction to Serverless Computing` 和 `Developer Theory`  
 AWS Certified SysOps Administrator Associate 至 `Monitoring & Reporting / AWS Organisations Lab`，已看章节 `Automation` 到 `OpsWorks`  
 AWS Certified DevOps Engineer Professional 至 `SDLC Automation / Deployment Strategies`，另外看章节 `Configuration Management and Infrastructure as Code` 到 `AWS OpsWorks`  
 AWS Certified Big Data Specialty 至 `Domain 1 - Collection / Kinesis Streams Core Concepts`
