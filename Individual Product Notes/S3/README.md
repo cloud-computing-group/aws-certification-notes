@@ -141,6 +141,16 @@ S3 支持高频率的请求，你的 S3 bucket 常规下可每秒接收 3500 个
         * mybucket/h35d-2018-03-04-15-00-00/cust234234/photo2.jpg
         * mybucket/o3n6-2018-03-04-15-00-00/cust345345/photo3.jpg
   
+### Lifecycle Policies
+* 你可以使用 `S3 Lifecycle Management` 来管理优化你的数据、对象在 S3 上的保存成本
+* 你可以配置 lifecycle rule 来告知 S3 将数据、对象转存到更低成本的 S3 存储层级/类别，或档案它们甚至删除它们
+* 存储的数据、对象最好都有定义良好的 lifecycle，比如某些日志文件在一定时限之后就不再那么有保存意义、价值了  
+用例：  
+* 创建对象 90 天后将其转存到 IA 存储层级（比如交易日志文件）
+* 创建数据 1 年后将其文档化存入 Glacier
+* 设置数据、对象在创建 1 年后过期 - S3 会自动替你删除过期数据
+* Server Access Logging 的 bucket 随着时间推移会积累过多日志文件（所以需要设定条件自动删除）
+  
 ### 更多
 Which native AWS service will act as a file system mounted on an S3 bucket? - AWS Storage Gateway  
   

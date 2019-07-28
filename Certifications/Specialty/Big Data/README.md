@@ -12,3 +12,14 @@
 生成 Dataset，需要下载 TPC-H 工具（benchmark）来生成 Dataset（创建一个大数据集并分割成多个 tbl 文件最后存入 S3 中）。  
 流数据是什么？（https://aws.amazon.com/cn/streaming-data/）  
   
+SQS VS Kinesis - 何时使用哪个：  
+* SQS 使用场景  
+    * 按顺序处理
+    * 图片处理
+* Kinesis 使用场景  
+    * 快速处理日志与采集数据
+    * 实时 metrics、报告
+    * 实时数据分析
+    * 复杂的流数据处理
+    * 通常处理完发送给其他服务如 Redshift、DynamoDB、S3、Elastic Search
+  
