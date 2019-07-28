@@ -141,5 +141,8 @@ S3 支持高频率的请求，你的 S3 bucket 常规下可每秒接收 3500 个
         * mybucket/h35d-2018-03-04-15-00-00/cust234234/photo2.jpg
         * mybucket/o3n6-2018-03-04-15-00-00/cust345345/photo3.jpg
   
+### 更多
+Which native AWS service will act as a file system mounted on an S3 bucket? - AWS Storage Gateway  
+  
 ### Summery
 https://aws.amazon.com/s3/faqs/
