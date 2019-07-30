@@ -29,7 +29,7 @@ CloudWatch 默认提供的基本监控是对 EC2 的监控 - Host Level Metrics 
 大部分各服务的 metric 数据细粒度默认是每1分钟的，但也有3分钟的或5分钟的（standard monitoring），这是基于该服务的需要自身设定的。当想设置该服务 metric 为1分钟或2、3分钟这种较小的细粒度时，你需要启用（或者说turn on）detail monitoring，自定义的 metric 最小数据细粒度是1分钟。  
   
 ### CloudWatch Alarms：  
-可以创建一个 Alarm 去监控任何 CloudWatch Metric，这可以是 EC2 CPU Utilization、ELB 延迟或你的 AWS 账单，你可以通过设置一个合适的阈值/临界值来触发此 Alarm，并可以设置任意 action（比如给你自己发送 SNS 通知、触发一个 lambda function 去更改你的 infrastructure）去响应此 Alarm 触发（比如本月账单超过10元），因此 CloudWatch 及其 Alarm 是个十分强大的工具。  
+可以创建一个 Alarm 去监控任何 CloudWatch Metric，这可以是 EC2 CPU Utilization、ELB 延迟或你的 AWS 账单，你可以通过设置一个合适的阈值/临界值来触发此 Alarm，并可以设置任意 action（比如给你自己发送 SNS 通知、触发一个 lambda function 去更改你的 infrastructure）去响应此 Alarm 触发（比如本月账单超过10元、CPU 性能值等等），因此 CloudWatch 及其 Alarm 是个十分强大的工具。  
   
 CloudWatch 不仅可以监控云上资源，还可以用于 on premise 的资源监控，你只需要下载安装 SSM Agent 和 CloudWatch Agent，就可以把自己本地数据中心的监控数据上传到 CloudWatch 的 Dashboard 上。  
   
@@ -55,7 +55,27 @@ CloudWatch - Dashboards are multi-region and can display any widget to any regio
 ### CloudWatch vs CloudTrail vs Config
 * CloudWatch 监控性能如 CPU、网络等等
 * CloudTrail 监控 AWS 平台收到的 API 请求、调用（资源、服务开通等等，用于审计）
-* AWS Config 更像一个 CCTV，记录了你的 AWS 环境的状态，可以在状态有变更时通知你
+* AWS Config 更像一个 CCTV，记录了你的 AWS 环境的状态，可以在状态有变更时通知你  
+  
+### CloudWatch Custom Metrics
+用例（手动 data point）：  
+```shell
+aws cloudwatch put-metric-data --metric-name randomNumber --namespace Random --value `shuf -i 1-1000 -n 1` --region=ap-southeast-2
+```  
+基于上面可以在 CloudWatch 相应自定义 metric 模仿 metric 图来。  
+https://docs.aws.amazon.com/zh_cn/AmazonCloudWatch/latest/monitoring/publishingMetrics.html  
+  
+### Events Lab
+* Events - 你的 AWS 环境任意改动
+* Targets - 处理 events 的对象
+* Rules - 匹配 events 与 targets 的逻辑  
+  
+步骤：  
+1. CloudWatch 控制台创建 events，选择事件模式，选择服务名（比如 CodeCommit）与事件类型（比如仓库状态更新），然后选择 targets（比如 SNS 及一个 topic）
+2. 创建完成后可以在 rules 列表中看到（你可能会看到已有一些 rules 但你没创建过的，它们可能是其他服务里间接创建的，比如 CodePipeline）
+  
+### CloudWatch Logs Lab
+CloudWatch Logs（所有的程序的 log、printf 信息或通过往实例的 amazon-cloudwatch-agent 的日志文件里写数据）及其 Insights（run query against your logs like Kibana 及可视化）包含更多应用的日志细节。  
   
   
 ## CSAA Test Notes:  
