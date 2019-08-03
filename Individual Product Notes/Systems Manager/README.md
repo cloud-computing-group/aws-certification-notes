@@ -5,6 +5,7 @@
 * 与 CloudWatch 集成，可以让你查看 dashboard、查看操作数据以及监测到问题、报错。
 * 包括协助在跨资源、平台上运行命令行以进行自动化任务（比如进行安全补丁、包安装）
 * 组织你的库存、根据应用或环境（包括 on-premises 系统）对资源进行分组  
+* 降低成本
   
 运行命令行：  
 * 比如可以在多个 EC2 实例上运行预定义命令
@@ -13,7 +14,7 @@
 * 创建快照、备份 DynamoDB 表
 * 执行补丁和更新
 * 运行 Ansible playbook
-* 运行 shell 脚本  
+* 运行 shell 脚本（无需 SSH，控制台操作即可）  
   
 Lab 步骤：  
 1. 创建拥有相应 SSM 管理权限的 IAM role（此例 AmazonEC2RoleforSSM）
@@ -27,6 +28,7 @@ Lab 步骤：
     * 运行命令（Run Command）可以在不登录、SSH 实例的情况下，对一个或多个实例、资源运行命令（如安装应用、运行 Ansible playbook、自定义脚本程序等等），设置完命令后还可以设置 SQS 通知、输出写入 S3 bucket 等等后续操作
     * 补丁管理选项卡，对多个实例进行多种补丁操作
     * Maintenance Windows 选项卡，可设置周期性地运行命令、自动化、任务等等
+    * Distributor 选项卡，可以给你自己开发的软件打包并部署到 Systems Manager 管理的所有实例上
     * 状态管理选项卡，比如对资源配置更新观察其执行状态
     * Activation 选项卡，管理 on-premises 的服务器、VM、实例、系统以及甚至树莓派设备等等（但是前提是都必须安装 System Manager SSM Agent - 连接 SSM 的中间人）（以及混合云环境管理，因此也能管理 AWS 的 EC2 实例）
     * Documents 选项卡，定义前面的自动化任务及命令的地方，你可以自己新建、自定义（JSON）  
