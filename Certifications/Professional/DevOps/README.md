@@ -60,11 +60,10 @@ Source Stage (AWS CodeCommit) -> Deploy Stage (Development) (AWS CodeDeploy -> A
     * 回滚简易，仅仅是 DNS 更新
     * 整个新环境的健康及性能检查会在迁移前完成
     * 使用先进的模版系统，比如 CloudFormation，整个部署过程可以完全自动化
-    * AB 测试
 * Canary Deployment
     * 和 Blue Green Deployment 基本一样，不同的是新版本启动检查完后不是直接把 DNS 全转进新版本，而是按比例地分配，意味着旧版本仍在工作
     * 随着时间和开发者的设置（Route 53 weighted round robin），流量比例最终慢慢都增加、迁移至新版本，最后再关停旧版本
-    * AB 测试  
+    * A/B 测试  
   
 ## Exam Tips
 https://d1.awsstatic.com/whitepapers/DevOps/practicing-continuous-integration-continuous-delivery-on-AWS.pdf  
