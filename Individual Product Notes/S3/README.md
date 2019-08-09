@@ -43,7 +43,7 @@ S3 是 Object-based，Object 包括以下：
 * S3 - IA：IA 即数据是 Infrequently Access 的（比如一年或一季才访问一次），但是在需要时可快速访问，费用比 S3 标准版低，但是 retrieval（恢复）要另外收费。
 * S3 - One Zone IA：类似 IA 但是数据只存储在一个 Availability Zone 里，保持 99.999999999% durability 但是 99.5% availability。费用比 IA 还要低 20%。但是如果那个 Availability Zone 发生 outage 了，则应用所需的这部分数据访问就宕掉了。
 * Reduced Redunancy Storage：设计为该年 99.99% availability 以及 99.99% durability。应用场景为存储那些不重要的、丢失后但可容易重新生成的数据（比如缩略图），注意此层级、类别在某些 region 不提供，且 AWS 以后可能不再支持此层级。
-* Glacier：非常便宜，只用于档案性质的存储。不能实时访问数据，通常需要 3-5 小时去恢复、提取数据。99.99% availability（数据恢复后）以及 99.999999999% durability。
+* Glacier：非常便宜，只用于档案、备份性质的存储。不能实时访问数据，通常需要 3-5 小时去恢复、提取数据。99.99% availability（数据恢复后）以及 99.999999999% durability。（长期、安全、耐用的对象存储）  
   
 ### S3 智能层级（Intelligent Tiering）
 * 未知的或难以预估的数据访问情况/模式
@@ -153,6 +153,20 @@ S3 支持高频率的请求，你的 S3 bucket 常规下可每秒接收 3500 个
   
 ### 更多
 Which native AWS service will act as a file system mounted on an S3 bucket? - AWS Storage Gateway  
+  
+### Glacier 特性
+* Query-in-place functionality - 可以在 at rest 的数据上运行数据分析
+
+适用场景：  
+* 多媒体文件
+* 医疗、健康档案
+* 科研数据存储  
+  
+### Retrieval（数据返回非常慢）
+Policies 与费用
+* Free Tier - 免费但只能每月 retrieve 10GB 数据
+* Max Retrieval Rate - 按 ？GB/每小时 收费
+* No Retrieval Limit - 没有任何 Retrieval Rate 限制
   
 ### Summery
 https://aws.amazon.com/s3/faqs/

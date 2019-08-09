@@ -64,7 +64,12 @@ Make an Alexa Skill Lab:
 * DynamoDB table
 * Kinesis Stream
 * SQS notification
-* API Gateway
+* API Gateway  
+  
+### Dead Letter Queues
+* 异步触发的 Lambda 函数会在事件被丢弃之前重试两次
+* 如果重试失败且你不知道为什么失败，你可以使用 Dead Letter Queue
+* 把未处理的事件转发至 SQS 或 SNS 以分析（会包括RequestID、ErrorCode 和 ErrorMessage）  
   
   
   
