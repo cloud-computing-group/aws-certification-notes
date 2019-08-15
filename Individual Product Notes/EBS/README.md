@@ -1,7 +1,7 @@
 ## A Cloud Guru
-EBS 即 attached 到 EC2 实例的虚拟硬盘（virtual disk）.  
+EBS（Elastic Block Storage） 即 attached 到 EC2 实例的虚拟硬盘（virtual disk）.  
 大致有四种 Storage:  
-1. General Purpose SSD（API name: gp2） - 适用于大部分场景如虚拟桌面，系统的boot volumes，运行低延迟交互应用，测试、沙盒环境，最大吞吐量率是 10000 IOPS。
+1. General Purpose SSD（API name: gp2） - 适用于大部分场景如虚拟桌面，系统的 boot volumes，运行低延迟交互应用，测试、沙盒环境，最大吞吐量率是 10000 IOPS。
 2. Provisioned IOPS SSD（API name: io1） - 对 IOPS 有高要求或每个 volume 的吞吐量率高于 10000 IOPS 或 160 MiB/s 的场景，如大型数据库（MongoDB、Cassandra、Microsoft SQL）负载。
 3. Throughput Optimized HDD（API name: st1） - 流负载同时要求高吞吐量率、一致性、低成本的场景，如大数据、数据仓库、日志处理，注意不可以用做系统 boot volume。
 4. Cold HDD （API name: sc1）- 面向吞吐量的存储、低访问频率但存储大量数据的场景，如最低成本的文件服务器存储需求，注意不可以用做系统 boot volume。  
@@ -20,5 +20,22 @@ EBS 新建时即可达到其本身最佳性能，这称之为 pre-warming，但�
 ### Volume Status Checks：  
 有四种状态：ok、warning（degraded）、impaired（stalled 或 not available）、insufficient-data.  
   
+### EBS Volumes：
+* 可以用来构建文件系统、运行数据库、运行操作系统等等
+* SSD backed storage - 用于操作系统和数据库等 I/O 密集型用例  
+  
 ### Modifying EBS Volumes：  
 如果已经 EBS volume 已经 attached 到 EC2 实例上，无论有没有 detach 实例都可以通过 console 或 command line 修改它（increase size、change type etc），并可以监控其更新进度。  
+  
+### EBS SSD IOPS：
+* IOPS（Input/Output Operations per second）即 SSD 卷性能的基准、标杆
+* IOPS capacity 是基于卷的大小
+    * gp2 卷：最小 100 IOPS，3 IOPS/GB 最高 16000 IOPS
+    * io1 卷：50 IOPS/GB 最高 64000 IOPS  
+  
+如果超过卷的 IOPS 限制：  
+* 你的 IOPS 请求会开始排队
+* 基于你的应用是否对 IOPS 或延迟敏感  
+到达 IOPS 限制的应对方法：  
+* gp2 可以增加卷的大小 - 但如果卷以及大于等于 5.2 TB，则你已达到 gp2 的最高 IOPS 16000
+* 如果想要超过 16000 IOPS，则需要更改存储类型为 Provisioned IOPS  

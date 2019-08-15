@@ -76,6 +76,61 @@ Source Stage (AWS CodeCommit) -> Deploy Stage (Development) (AWS CodeDeploy -> A
     * 随着时间和开发者的设置（Route 53 weighted round robin），流量比例最终慢慢都增加、迁移至新版本，最后再关停旧版本
     * A/B 测试  
   
+## Tagging
+* 一种标签，可以赋给一个 AWS 资源
+* 由键和值组成
+* 一个键可以有多个值  
+  
+### 好处
+    * 组织你的资源
+    * 跟踪你的支出、费用  
+  
+### Access Control
+    * 可以结合使用 IAM Policies 里的 Condition（即通过 tag 控制对资源的访问）  
+用例：  
+```yaml
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:StartInstance",
+                "ec2:StopInstance"
+            ],
+            "Resource": "arn:aws:ec2:*:*:instance/*",
+            "Condition": {
+                "StringEquals": {"ec2:ResourceTag/Owner": "${aws:username}"}
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": "ec2:DeleteInstance",
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {"ec2:ResourceTag/Owner": "admin"}
+            }
+        }
+    ]
+}
+```
+  
+### Cost allocation tags
+有 2 种：  
+1. AWS-Generated Cost Allocation Tags
+2. User-Defined Cost Allocation Tags  
+  
+* 在 Billing 控制台启用
+* 基于 tag，AWS 生成一个 cost allocation 报告（可导出到 S3）
+    * CSV
+    * 通过 active 的 tag 分组
+* 为所有应用的资源打上 tag 以检查运行应用时支出、费用都发生在哪里  
+  
+  
+  
+## 更多
+关于高可用性：https://zh.wikipedia.org/wiki/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7  
+  
 ## Exam Tips
 https://d1.awsstatic.com/whitepapers/DevOps/practicing-continuous-integration-continuous-delivery-on-AWS.pdf  
 Continuous Integration 是关于代码集成、合并的，是高频率更新且允许多人在同一个应用项目、代码仓库上工作、推送更新的。  

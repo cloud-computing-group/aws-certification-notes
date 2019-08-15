@@ -1,8 +1,8 @@
 ## A Cloud Guru
 ### ELB 全称 Elastic Load Balancers，主要包括 3 种 Load Balancer:  
-1. Application Load Balancer（HTTP / HTTPS 层面，OSI 第7层）
-2. Network Load Balancer（TCP 层面，OSI 第4层，适用于要求 ultra high performance 或高RPS同时低延迟或需要 static IP 地址的场景）
-3. Classic Load Balancer（旧的 ELB 类型，OSI 第4层或第7层 - 基于场景，未来可能被淘汰掉）  
+1. Application Load Balancer（HTTP / HTTPS 层面，OSI 第7层）（Content Base Routing - 即 HTTP Content、Headers，可以进行智能、高级路由请求设置比如发送特定请求到特定服务器上）
+2. Network Load Balancer（TCP 层面，OSI 第4层，适用于要求 ultra high performance 或高RPS同时低延迟或需要 static IP 地址的场景）（Transport Layer，极低延迟、非常快、通常在产品环境中使用它 - 每秒可处理百万次请求，但也费用较高）
+3. Classic Load Balancer（旧的 ELB 类型，OSI 第4层或第7层 - 基于场景，不能如 ALB 那般进行智能设置，未来可能被淘汰掉）  
 注意：ELB 不是免费的，因此注意当一个 region 的 ELB 不再使用后请记得停掉，常见的一种情况是产品的部署转移到另一个 region，但忘记关停以前 region 的 ELB 并且用户在新 region 的 ELB 页面看不见前 region 的运行 ELB，导致无谓的支出。
   
 ### 创建、服务开通（provisioning）一个 ELB：  
@@ -34,7 +34,41 @@ ELB 推送 Load Balancers 以及你的 targets（比如 EC2 实例） 的 data p
 用于跟踪客户端对 target 或某服务的请求，负载均衡接收到客户请求后会在转发至 target 之前增添或更新 X-Amzn-Trace-Id header，任何在负载均衡和 target 之间的服务或应用程序也都可以增添或修改此 header。注意只有 Application Load Balancer 可以使用 Request Tracing。  
   
 ### CloudTrail：  
-可用于收集 ELB API 的请求记录、数据（如 ELB 服务开通、healthy check 设置更改等等，具体信息包括请求来源如 IP 地址、时间等等），并以日志文件的形式存储于 S3 中。
+可用于收集 ELB API 的请求记录、数据（如 ELB 服务开通、healthy check 设置更改等等，具体信息包括请求来源如 IP 地址、时间等等），并以日志文件的形式存储于 S3 中。  
+  
+### Pre-Warming 你的负载均衡
+假使你有一个电商网站，准备进行节日促销，流量预计将是平时的 10 倍，即极短时间内（如近乎垂直直线）巨量增加的流量可能会使你的 ELB 过载从而无法处理所有请求（如果是逐渐增加的流量则无论流量多大都可以用 ELB 的 Auto Scaling 解决），解决方法是联系 AWS 申请 ELB Pre-Warming。  
+Pre-Warming 基于你预期的流量会配置 ELB 达到合适的 capacity 级别，申请 Pre——Warming 时 AWS 需要知道：1.开始与结束日期；2.预期的每秒请求次数；3.大致总请求量。  
+  
+### 负载均衡与 static IP 地址
+* Application Load Balancer - 自动扩展以适应负载，但是会对客户端连接的 IP 地址有影响因为引入新的 ALB
+* Network Load Balancer - 不会有 IP 问题因为在每个 subnet 里创建了 1 个稳定的 IP 地址，这使得防火墙规则简单了 - 客户端只需要启用访问每个 subnet 里的 IP 即可
+* 不必二选一，可以两个同时用兼有二者优点 - 把 ALB 放在 NLB 后  
+  
+### ELB 错误信息
+* CLB 和 ALB 默认成功响应为 200
+* 不成功的请求响应会返回 4XX 或 5XX
+* 4XX 为客户端错误 - 比如 URL 错误返回 404
+* 5XX 为服务端错误  
+  
+### ELB CloudWatch Metrics
+* ELB CloudWatch Metrics 推送 metrics 至 CloudWatch（其中包括负载均衡及其背后、后端的实例的信息）
+* 帮助确定系统是否性能良好
+* 可以创建一个 CloudWatch 警报以执行特定动作，比如如果 metrics 达到预设限定的阀值就发邮件给管理员
+* Metrics 每 60 秒收集一次  
+  
+#### ELB CloudWatch Metrics - Overall Health
+* BackendConnectionErrors - 与后端实例连接的失败次数
+* HealthyHostCount - 注册的健康的实例数量
+* UnHealthyHostCount - 注册的健康的实例数量
+* HTTPCode_Backend_2XX,3XX,4XX,5XX  
+  
+#### ELB CloudWatch Metrics - Performance Metrics
+* Latency - 注册实例的响应或连接所需要的秒数
+* RequestCount - 在一段时间内（1 或 5 分钟）完成的请求或连接次数
+* SurgeQueueLength - 待处理请求数量，最大队列值为 1024，满了之后额外的请求会被拒绝（只适用于 CLB）
+* SpilloverCount - SurgeQueue 里满了之后被拒绝的请求数量（只适用于 CLB）（这个数字过高暗示了可能的性能问题，意味着可能需要扩展基础设施架构）  
+  
   
   
 ## CSAA Test Notes:  
