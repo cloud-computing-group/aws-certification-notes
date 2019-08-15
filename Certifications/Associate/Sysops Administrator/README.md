@@ -39,3 +39,14 @@
 * 然后可以使用 Bastion Host 来初始化一个在 private subnet SSH/RDP session 到 private subnet 的一个 EC2 实例，所以 Bastion Host 也被称为 jumpbox
 * 这可以使你安全地管理你的 EC2 实例而且又不用将其暴露在互联网中，Bastion Host 设置限制指定特定 IP 可访问且特定端口可访问  
   
+### Elasticity & Scalability
+Elasticity - Scale with Demand（短期方案）  
+Scalability - Scale Out Infrastructure（长期方案）  
+举例 EC2：  
+* Elasticity - 通过 Auto Scaling 增加实例数量
+* Scalability - 增加实例本身的性能、容量、算力，又或者使用 reserved 实例  
+注：RDS 没有 Elasticity 但是 Aurora 有（Aurora Serverless）  
+  
+### Trouble Shooting Potential Autoscaling Issues
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Certifications/Associate/Sysops%20Administrator/Trouble%20Shooting%20Potential%20Autoscaling%20Issues.png)  
+  

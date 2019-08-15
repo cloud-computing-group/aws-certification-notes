@@ -166,7 +166,13 @@ Which native AWS service will act as a file system mounted on an S3 bucket? - AW
 Policies 与费用
 * Free Tier - 免费但只能每月 retrieve 10GB 数据
 * Max Retrieval Rate - 按 ？GB/每小时 收费
-* No Retrieval Limit - 没有任何 Retrieval Rate 限制
+* No Retrieval Limit - 没有任何 Retrieval Rate 限制  
+  
+### MFA Delete
+* 使用 MFA 来避免错误、意外、恶意地删除 S3 数据、bucket（这里删除指完全删除，即连版本控制记录都删除）
+* 启用基于 MFA 的删除机制后
+    * 你需要从你的 MFA 设备获取一个有效 code 并输入后才能删除一个 S3 对象
+    * 或暂停、重新激活 S3 bucket 的版本控制  
   
 ### Summery
 https://aws.amazon.com/s3/faqs/
