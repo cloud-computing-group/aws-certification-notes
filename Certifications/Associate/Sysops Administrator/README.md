@@ -50,3 +50,14 @@ Scalability - Scale Out Infrastructure（长期方案）
 ### Trouble Shooting Potential Autoscaling Issues
 ![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Certifications/Associate/Sysops%20Administrator/Trouble%20Shooting%20Potential%20Autoscaling%20Issues.png)  
   
+### Encryption & Downtime
+对于大部分 AWS 资源，加密只能在创建时启用。  
+* EFS（Elastic File System） - 如果你想加密已有的 EFS，你需要新建一个加密的 EFS，然后再把旧的 EFS 的数据迁移过去
+* RDS - 如果你想加密已有的 RDS 数据库，你需要创建一个新的 RDS 数据库然后再把旧数据库的数据迁移过去
+* EBS - 加密也是必须在创建时才能启用
+    * 你不能加密一个未加密的 volume，或解密一个已加密的 volume
+    * 你可以在加密和未加密的 volume 之间迁移数据（比如使用 rsync 或 Robocopy）
+    * 如果你想加密一个已存在的 volume，你可以创建一个快照，复制该快照时启用加密从而获得加密快照，然后 restore 这个加密快照给一个新的加密 volume
+* S3 - 任何时候都可以加密
+    * S3 buckets 或单独的一个 object 在任何时候都可以加密，无需创建时就加密可之后再加密，且启用加密不会对应用、性能带来任何影响  
+
