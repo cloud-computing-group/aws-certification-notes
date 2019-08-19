@@ -61,3 +61,8 @@ Scalability - Scale Out Infrastructure（长期方案）
 * S3 - 任何时候都可以加密
     * S3 buckets 或单独的一个 object 在任何时候都可以加密，无需创建时就加密可之后再加密，且启用加密不会对应用、性能带来任何影响  
 
+### Security - Compliance Frameworks
+* PCI
+* ISO
+* HIPPA  
+  
