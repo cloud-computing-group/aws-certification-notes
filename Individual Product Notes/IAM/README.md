@@ -37,3 +37,62 @@ IAM 用户的使用者不一定是真实的个人或团体，也可以是机器�
   
 ### 创建 IAM Role：  
 Role用于给 entities（如：另一个AWS Account的 IAM User、EC2 实例中的程序、VM 如 EC2 实例、其他对 AWS 资源进行访问或操作的 AWS 服务如 Lambda、通过比如 SAML 认证授权的来自 Corporate Directory 的 User、来自 OpenID Provider / Cognito 的 User，等等） 授权。  
+  
+### IAM Role 与自定义 Policies - Lab
+可以通过向导或 JSON 实现自定义 IAM Policies。  
+Policy 基本定义包括：  
+* Service（目标服务是哪一类 AWS 服务的，比如 S3）
+* Action（动作权限如读、写、删除）
+* Resources（这是一个选项，选择是工作于目标服务的指定的资源还是所有的资源 - 比如 S3 的某个/所有 bucket 或某个/所有 object）
+* Name（Policy 名称）  
+  
+然后就可以为你的任意服务（比如 EC2）的任意 IAM Role 设置以使用、添加该 Policy 了。  
+注意：更新 Policy 的话不会立即工作（比如添加写权限），会稍微有一些时间延迟。  
+Role 可以附加给任意实例（即使实例已经运行）。  
+  
+### MFA & Reporting with IAM
+如上面笔记，启用 MFA，会得到一个二维码（该二维码可用于日后，如果丢失了手机或 MFA 设备的话，所以建议截图保留），下载 MFA 软件扫描该二维码，填入两次认证码即完成启用。  
+对于创建的单独的 IAM User 的话，也可以启用，方法如下：  
+* 控制台找到该 User 的 Security credentials 设置 -> 在 Assigned MFA device 下选择 yes -> 然后弹出向导框 -> 接下来选择 MFA 类型、扫描二维码并填认证码等步骤与普通 AWS 账号一样。
+* CLI - 基本程序与控制台一样，只是通过命令行来开启 MFA 选项以及输入 2 个认证码而已，命令行例子如下（第一个命令下载二维码，你仍需用 MFA 软件扫描该二维码以获得认证码）：  
+```shell
+aws iam create-virtual-mfa-device --virtual-mfa-device-name EC2-User --outfile /home/ec2-user/QRCode.png --bootstrap-method QRCodePNG
+aws iam enable-mfa-device --user-name EC2-User --serial-number arn:aws:iam::"USERNUMBERHERE":mfa/EC2-User --authentication-code-1 "CODE1HERE" --authentication-code-2 "CODE2HERE"
+```
+  
+通过使用 STS（Security Token Service），你还可以强制使用 MFA（在 CLI 上）（即 CLI 访问 AWS 资源在每隔一段时间比如 12 小时后必须重新输入 MFA 认证码并通过才能再访问资源，https://aws.amazon.com/cn/premiumsupport/knowledge-center/authenticate-mfa-cli/）。  
+  
+IAM 控制台 - Credential Report：  
+可下载报告，报告比如你有多少 User 启用了 MFA。  
+  
+### Security Token Service（STS）
+允许用户有限制地临时性地访问 AWS 资源，用户来源于以下 3 个地方：  
+* Federation（一般是 Active Directory）
+    * 使用 SAML
+    * 用户基于其 Active Directory 的身份验证信息（Credential）被允许临时访问，不一定必须是 IAM User
+    * 单点登录允许用户登录 AWS 控制台而无需 IAM 身份验证信息
+* 手机应用 Federation
+    * 使用 Facebook、Google、Amazon 或其他 OpenID provider 来登录
+* 跨账号访问
+    * 允许另一个 AWS 账号下的 IAM Users 访问该 AWS 账号的资源
+  
+一些术语：  
+* Federation - 将某个域（比如 IAM）下的一组用户和另一个域（比如 Active Directory、Facebook 等等）下的一组用户进行合并、联结
+* Identity Broker - 一个允许你从点 A 获取 identity 并联结（join、federate）到点 B 的服务
+* Identity Store - 像 Active Directory、Facebook、Google 等等这类服务
+* Identities - 一个服务（如 Facebook 等等）里的一个用户、身份  
+  
+一个场景：  
+你托管了一个网站在 EC2 实例且在你的 VPC 上。用户通过他们在公司总部的 Active Directory 服务器上的身份登录网站以进行认证、授权分析，你的 VPC 通过安全 IPSEC VPN 连接到该公司总部，一旦成功登录，用户将可以且只可以访问其个人所属的 S3 bucket。请问实现这一场景需求。  
+![](https://github.com/cloud-computing-group/aws-certification-notes/tree/master/Individual%20Product%20Notes/IAM/Scenario%20Solution.png)  
+步骤如下：  
+1. 用户输入账号名和密码
+2. 应用程序、网站（即 reporting application）调用 Identity Broker，broker 获取账户名和密码
+3. Identity Broker 使用组织的 LDAP directory（延伸：也可以是其他如 Facebook、Google 等）来确认用户的身份
+4. Identity Broker 使用 IAM 身份验证信息调用新的 GetFederationToken 方法，该调用必须包含一个 IAM Policy（指定权限被授予一个临时安全的身份验证信息）和一个持续时间（1 至 36 小时）
+5. STS 确认 IAM User 的 Policy 调用了 GetFederationToken 方法并给予了权限以创建新的令牌，然后返回 4 个值给应用：一个 access key、一个 secret access key、一个令牌、一个持续时间（令牌的可用时间）
+6. Identity Broker 返回临时安全的身份验证信息到应用程序、网站（reporting application）
+7. 数据存储应用使用该临时安全的身份验证信息（包括令牌）向 S3 发起请求
+8. S3 使用 IAM 以确认身份验证信息被允许对给定的 S3 bucket 和 key 作请求操作
+9. IAM 告知 S3 请求合规、通过可以操作  
+  
