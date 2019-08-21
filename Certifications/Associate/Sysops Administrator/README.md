@@ -189,3 +189,27 @@ AWS 安全服务之一 - 漏洞与渗透测试：
     * CloudTrail 日志文件验证
     * CloudTrail 日志文件加密  
   
+### AWS Hypervisors
+Hypervisors（虚拟机监视器）又称 virtual machine monitor（VMM），是一种运行虚拟机的计算机软件、固件或硬件。运行 Hypervisors 的主机被称为 host machine，Hypervisors 管辖的每个虚拟机被称为 guest machine。  
+长期以来，EC2 实例都是运行在 Xen Hypervisors 上的虚拟机。Xen Hypervisors 可以将 guest OS（操作系统）以 Paravirtualization（PV）（比如 Linux）或 Hardware Virtual Machine（HVM）（比如 Windows）运行。  
+* PV 是一种更轻量级的虚拟化形式，通常、曾经速度更快（不过现在与 HVM 的速度差距也不大了）。  
+    * PV guest 依赖于 Hypervisors 提供优先度操作的支持，因为这些 guest OS 没有 CPU 的高级访问。CPU 提供的优先级模型分 4 级 Rings 即 0-3，Ring 0 优先级最高而 Ring 3 最低，host OS 执行在 Ring 0，guest OS（在 AWS 上即 EC2 实例）运行在 Ring 1，应用程序执行在 Ring 3。
+* HVM guests 是完全虚拟化的。在 Hypervisors 上的 VM 并不知道它们与其他 VM 共享处理时间。  
+亚马逊建议使用 HVM，且 Windows 只能运行在 HVM 上，Linux 可以运行在 PV 和 HVM 上。  
+  
+一些实例如 C5 类型实例如今运行在 KVM 上，意味着现在不是所有的实例都是基于 Xen 了，目前 AWS 未正式宣布 Hypervisors 迁移计划，可以继续关注。  
+  
+#### Isolation
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Certifications/Associate/Sysops%20Administrator/Hypervisors%20&%20Security%20Group%20etc%20Isolation.png)  
+  
+#### 对 Hypervisors 的访问
+管理员若有访问管理面板（Hypervisors）业务需求，可以通过使用 MFA 获得访问 propose-built administration hosts 的权限。这些 administration hosts 是一些特别定制设计、配置、创建的系统，这些系统强化了对云管理面板（Hypervisors）的保护。所有这些访问都会被日志记录、审计。当管理员不再有访问管理面板的业务需要时，对这些 hosts 及相关系统的特权访问应被撤销。  
+  
+#### 对 Guest（EC2）的访问
+虚拟化实例完全由你控制（比如通过 SSH），你对这些账号、服务、应用都拥有完整的 root 访问、管理、控制权限，AWS 没有任何权限访问你的实例或 guest OS。  
+  
+#### 存储擦洗
+硬件层面上，EBS 自动擦洗用户用过的每一个存储块，因此一个用户在 EBS 相关硬件上存储的数据不会在无意中暴露、泄漏给另一个用户，其机制是 Hypervisors 会把原来分配给某个用户的但如今不再属于、分配给该用户的存储块上的数据擦洗掉（设为 0）。在擦洗未完成前，存储块（硬件）都不会被放入可接受（重新）分配的存储池中。  
+擦洗之后你也无法使用任何工具进行数据恢复（保护之前用户的数据）。  
+RAM 存储也和上面一样，按机制擦洗以保护用户数据。  
+  
