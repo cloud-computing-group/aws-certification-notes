@@ -61,7 +61,7 @@ Scalability - Scale Out Infrastructure（长期方案）
 * S3 - 任何时候都可以加密
     * S3 buckets 或单独的一个 object 在任何时候都可以加密，无需创建时就加密可之后再加密，且启用加密不会对应用、性能带来任何影响  
   
-### Security - Compliance Frameworks
+### （安全）Security - Compliance Frameworks
 以下是 3 大安全标准、机构：  
 * PCI
     * 全称 The Payment Card Industry Data Security Standard（PCI DSS）是广泛接受的用于优化信用卡、借记卡、现金卡交易的安全性的政策与程序，也保护了持卡者个人信息不被误用
@@ -103,7 +103,7 @@ Scalability - Scale Out Infrastructure（长期方案）
   
 更多参考：https://aws.amazon.com/cn/compliance/  
   
-### DDoS
+### （安全）DDoS
 资料：https://d1.awsstatic.com/whitepapers/Security/DDoS_White_Paper.pdf  
   
 #### 什么是 DDoS 攻击
@@ -130,7 +130,7 @@ Distributed Denial of Service（DDoS）攻击是一种企图使你的网页应�
 * Auto Scaling（同时使用 WAFs 和 Web Servers）
 * CloudWatch  
   
-### AWS Marketplace Security Products
+### （安全）AWS Marketplace Security Products
 * Kali Linux  
     * Kali Linux 是基于 Debian 的 Linux 发行版，设计用于数字鉴识和渗透测试，它是行业标准
     * 可以在 Marketplace 购买此产品，并用它服务开通 EC2 实例  
@@ -146,7 +146,7 @@ AWS 安全服务之一 - 漏洞与渗透测试：
   
 课外知识：https://www.onlinehashcrack.com/  
   
-### Security & Logging
+### （安全）Security & Logging
   
 #### Logging in AWS
 服务：  
@@ -208,8 +208,56 @@ Hypervisors（虚拟机监视器）又称 virtual machine monitor（VMM），是
 #### 对 Guest（EC2）的访问
 虚拟化实例完全由你控制（比如通过 SSH），你对这些账号、服务、应用都拥有完整的 root 访问、管理、控制权限，AWS 没有任何权限访问你的实例或 guest OS。  
   
-#### 存储擦洗
+#### （安全）存储擦洗
 硬件层面上，EBS 自动擦洗用户用过的每一个存储块，因此一个用户在 EBS 相关硬件上存储的数据不会在无意中暴露、泄漏给另一个用户，其机制是 Hypervisors 会把原来分配给某个用户的但如今不再属于、分配给该用户的存储块上的数据擦洗掉（设为 0）。在擦洗未完成前，存储块（硬件）都不会被放入可接受（重新）分配的存储池中。  
 擦洗之后你也无法使用任何工具进行数据恢复（保护之前用户的数据）。  
 RAM 存储也和上面一样，按机制擦洗以保护用户数据。  
+  
+### （安全）专用实例与专用主机
+专用实例是跑在某个用户专用硬件上的 VPC 上的 EC2 实例。你的专用实例是在物理主机设备托管层面上与其他 AWS 用户的实例隔离的。  
+专用实例可能与同一个 AWS 账号的其他非专用实例共享物理硬件。  
+可以按需支付专用实例，相比之下，购买预留（reserved）实例可最高节省 70%，Spot 实例最高可节省 90%。  
+  
+可以同时使用专用主机与专用实例来运行 EC2 实例在你的专属物理设备上。相比专用实例，专用主机提供了实例是如何运行在物理设备的额外的控制与视界（比如网络端口、socket、处理器核等等），你可以持续的部署你的实例到同一个专属物理设备，因此，专用主机允许你更好地使用已有的软件许可证比如 VMWare、Oracle 许可证，又或者更好地解决企业合规问题、监管要求等等。  
+https://aws.amazon.com/cn/ec2/dedicated-hosts/  
+想服务开通专用主机，只需到 EC2 控制台 -> 点选左边选项卡 Dedicated Hosts -> Allocate Host -> 完成向导等等即可。  
+专用实例则在一般的 EC2 实例服务开通向导里即可设置（Tenancy 选项）。  
+  
+专用实例与专用主机都使用专属的物理设备。  
+专用实例按实例收费，专用主机按主机收费，两者都比普通实例贵，后者更贵。  
+  
+### Systems Manager EC2 Run Command
+* 以管理员身份管理大量实例，以及 on-premise 的系统
+* 针对大量实例执行自动化普通管理员任务和特设配置更新比如打补丁、安装软件、不登录的情况下连接新实例到 Windows 域等等  
+这些可以通过 Systems Manager 或 EC2 控制台完成。  
+实操时需要 IAM 的 Simple System Manager Role。  
+可以在没有启用 Remote Desktop Protocol 的情况下完成一些任务。  
+  
+### （安全）Pre-signed URLs with S3
+可以通过 CLI 或 SDK 实现。通过 Pre-signed URL 访问 S3 object。
+1. 创建 IAM Role 给 EC2 完整的 S3 权限
+2. 服务开通一个 EC2 实例，给予 Role，SSH 该实例
+3. 在实例的终端用 AWS CLI 新建 S3 bucket，随便上传一个文本文件，该文件将有一个 S3 的地址映射（私有的非公开可访问）
+4. 在实例的终端用 AWS CLI presign 该文件地址并赋予参数设定有效时间，终端会返回一个 pre-sign 地址（可公开访问，此时你可以将该地址发送给有需要的人，有效时间结束后该地址即自动作废），示例代码：`aws s3 presign s3://xxx/xxx.txt --expires-in 300`  
+默认有效时间是 1 小时。  
+  
+### （安全）AWS Config With S3
+对 S3 使用服务 AWS Config，比如 AWS Config 添加 Rule 监察 S3 bucket 是不是被错误设置成公共可读访问或公共可写访问，当合规性检查不通过时在 Config 控制台会显示、提醒，这在生产坏境中对安全尤其有用。  
+Rules name:  
+* s3-bucket-public-read-prohibited
+* s3-bucket-public-write-prohibited  
+  
+### Inspector vs Trusted Advisor
+两者相似、易混淆。  
+Inspector 属于 `Security, Identity, & Compliance` 类服务，是自动检查漏洞、安全问题，生成安全报告，提高合规性的服务。  
+Trusted Advisor 属于 `Management Tools` 类服务，虽然也有提高安全评估与优化建议（安全针对目标较宽泛，比如安全组、IAM、MFA、根用户等等），但更多关注优化成本、性能、容错等偏组织类管理类运行维护类领域的工作。  
+  
+### Instant（即刻）Encription
+* Instant Encription
+    * S3
+* Encription with Migration
+    * DynamoDB
+    * RDS
+    * EFS
+    * EBS  
   

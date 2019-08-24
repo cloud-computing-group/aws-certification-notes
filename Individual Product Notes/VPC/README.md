@@ -5,4 +5,10 @@
 * Application load balancer must be deployed into at least two subnets.
 * Not allow perform scan on VPC without alerting AWS.
 * NAT gateway - automatically assigned public IP, scale up to 10 GB, not in SG (NAT instance is).
-* VPC flow logs is stored in CloudWatch logs - VPC/Subnet/Network Interface levels.
+* VPC flow logs is stored in CloudWatch logs - VPC/Subnet/Network Interface levels.  
+  
+## A Cloud Guru
+  
+### Security Groups
+Security Groups 是 Stateful 的，则意味着同时允许 inbound outbound 流量。  
+  
