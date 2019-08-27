@@ -3,12 +3,12 @@
 ## 白皮书
 running-containerized-microservices-on-aws 至 P10/P25  
 aws-cloud-best-practices 至 P5/P42  
-microservices-on-aws 至 P14/P35  
+microservices-on-aws 至 P18/P35  
   
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
 AWS Certified Developer Associate 至 `Beginners Guide to EC2 / EC2 101`，已完成章节 `S3` `Introduction to Serverless Computing` `Other AWS Services` 和 `Developer Theory`，另外章节 `DynamoDB` 看至 `Scan vs Query API Call`  
-AWS Certified SysOps Administrator Associate 至 `Networking / VPC Overview`，已完成章节 `Automation`  
+AWS Certified SysOps Administrator Associate 至 `Networking / Creating a NAT Instance`，已完成章节 `Automation`  
 AWS Certified DevOps Engineer Professional 除章节 `High Availability, Fault Tolerance and Disaster Recovery` 外其余已看完  
 AWS Certified Big Data Specialty 至 `Domain 1 - Collection / Kinesis Streams Core Concepts`  
 注：笔记在学习 Developer、SysAdmin 和 DevOps 时做，Big Data Specialty 暂不做笔记或简要地做（先考试以后有空再补笔记）  
