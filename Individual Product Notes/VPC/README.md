@@ -61,6 +61,9 @@ VPC 基本上可以说是你的云上的一个虚拟数据中心，你可以通�
 8. 创建一个新的安全组，添加 MySQL、SSH、HTTPS 等应用层协议以及 TCP 协议，允许请求来源设置为那个公开的子网的 CIDR，则因此公开的子网内的应用就可以访问该安全组内的应用，且尽管新安全组的子网没有连接互联网网关，但此例中仍可以通过公开子网的实例 SSH 进新安全组内的实例。最后可以把已有的实例迁移、换到这个新安全组里。  
 PS：以上未设置网络 ACL，因此两个子网共用一个默认的网络 ACL。  
   
+### 关于子网
+一个子网是私有还是公开，取决于其路由表是否设置目标为互联网网关或者目标是否间接与互联网相连比如同一个 VPC 内另一个公开子网的 NAT Gateway（若子网所在的 VPC 没有互联网网关或与互联网间接连接的网关、目标则该 VPC 内的子网只能是私有子网）（当然安全组与网络 ACL 理论上也可以通过阻止互联网协议或流量从而隔断互联网连接，但这不是它们的正确使用方法，它们更多是用于更具体的网络设置），子网本身没有私有与否的相关属性。  
+  
 ### NAT Instance
 NAT Instance 准备被 NAT Gateway 替代（https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/vpc-nat-comparison.html ）。  
 通过使用你 VPC 中公有子网内的网络地址转换 (NAT) 实例，可让私有子网中的实例发起到 Internet 或其他 AWS 服务的出站 IPv4 流量（比如下载安装软件），但阻止这些实例接收由 Internet 上的用户发起的入站流量。另：NAT 不支持 IPv6 流量。  
@@ -81,4 +84,35 @@ Rule 数字：AWS 建议数字从 100 开始，且 100 是给 IPv4 而 101 是�
 安全组无法屏蔽某个 IP 地址，但你可以通过网络 ACL 做到这点、甚至屏蔽一段 IP 范围。  
 在架构上，网络 ACL 处在安全组之前面对流量，所以网络 ACL 如果进行屏蔽等操作则安全组即使允许了该类型、协议、来源的流量也无法接收到，因为流量先被网络 ACL 拦截了。  
 PS：https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/vpc-network-acls.html#nacl-ephemeral-ports  
+  
+### VPC Endpoint
+应用场景：比如私有子网内的实例想往 S3 存储数据，但是又不想走互联网（NAT Instance/Gateway），则一个可行的办法即走 AWS 内网即需使用 VPC Endpoint（Gateway 或 Interface 两种类型选择，且每个 Endpoint 选择只针对某个 AWS 服务比如 S3、EC2 等等，Interface 类型即 Elastic Network Interface）。  
+添加 Endpoint 时需要设置其关联的 VPC 、该 Endpoint 将服务的子网对应的路由表（该路由表会为它自动添加一个新 Route）以及该 Endpoint 的 Policy。  
+Elastic Network Interface（ENI）：https://docs.aws.amazon.com/zh_cn/AWSEC2/latest/UserGuide/using-eni.html  
+  
+### VPC Flow Logs
+这是一个 VPC 特性，可以让你获取 VPC 网络框架里关于流量的所有信息，如请求来源的 IP 地址、请求动作等等，这些流量日志数据会通过 CloudWatch Logs 保存起来。在你创建启用一个 flow log 后，其相关数据可以在 CloudWatch Logs 里找到。  
+可创建的 Flow logs 有 3 个层级：  
+* VPC
+* 子网
+* Network Interface Level  
+你在 VPC 的控制台里即可创建 Flow Log。另外你还可以设置把 Flow Log 的对应的 CloudWatch 的 Log Group 流向（Stream to） Lambda 或 Elastic Search Service 以开发更多自动化的程序、搜索、监控。  
+一旦一个 flow log 被创建了，你不可以再更改其配置。你不可以为不属于你 AWS 账号的 VPC 启用 Flow Log，即使它被你的 VPC Peered 了也不行。  
+以下 IP 流量不能被监控：  
+* 实例联系 AWS DNS 服务的流量，但不包括第三方 DNS 服务
+* Windows 实例激活 AWS Windows 许可证的流量
+* 实例元数据源 169.254.169.254 的流量
+* DHCP 流量
+* VPC 路由表默认占用的 IP 地址的流量  
+  
+### VPC 清理删除工作
+主要需要注意删除顺序，因为某些服务依赖另外一些服务，所以需要先删除这些服务否则被依赖服务无法删除。  
+  
+### CIDR 相关
+需要熟悉如何通过 CIDR 计算出 Netmask、First IP、Last IP、可用 IP 数量等等。  
+VPC 的子网的最大 size 是 /16，最小 size 是 /28。  
+AWS 默认每个子网占用 5 个 IP 地址，所以比如题目考核某个子网需要 X 个 IP 可用，请问最小 CIDR 为多少时要记得把此情况考虑进去。  
+
+### Direct Connect Gateway
+之前知道，自定义网络（如 on-primise）要快速、低延迟、独占地连接 AWS 时需要 Direct Connect Connection（物理），如果该自定义网络想相同地连接 AWS 其他几个 region 的网络时则无需再一一建立 Direct Connect Connection，只需 AWS 云平台上不同 region 上的 VPC 间使用 Direct Connect Gateway 即可，自定义网络可以通过 Direct Connect Connection 连接的 region 间接地连接到其他 region（通过它们之间的 Direct Connect Gateway）。  
   
