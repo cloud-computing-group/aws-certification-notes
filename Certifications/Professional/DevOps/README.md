@@ -126,6 +126,45 @@ Source Stage (AWS CodeCommit) -> Deploy Stage (Development) (AWS CodeDeploy -> A
     * 通过 active 的 tag 分组
 * 为所有应用的资源打上 tag 以检查运行应用时支出、费用都发生在哪里  
   
+### AutoScaling and Lifecycle hooks
+按照你的配置定义自动扩展 EC2 实例，比如通过 CloudWatch 监测 CPU、内存使用率并根据其数据触发扩展。  
+  
+Auto Scaling Lifecycle：  
+1. 开始于当 Auto Scaling Group 启动开通一个实例时
+2. 结束于关停一个实例时
+3. 结束于 Auto Scaling Group 将一个实例抽出服务群并将其关停时  
+  
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Certifications/Professional/DevOps/Auto%20Scaling%20Lifecycle.png)  
+上图的黄色块即 Lifecycle Hook，Lifecycle Hook 允许你在该 Hook 的特属时段内进行一些自定义动作，触发动作如在 Pending Hook 安装软件或在 Terminating Hook 复制并备份实例日志数据。  
+  
+Lifecycle Hook 是如何工作的：  
+1. Auto Scaling 响应一个扩展事件、请求，开通启动一个实例
+2. Auto Scaling 将实例放入 Pending:Wait 状态
+3. Auto Scaling 发送消息（包含信息及 token）给 Hook 定义的通知目标
+4. 等待直到被告知继续还是超时结束
+5. 现在可以执行你的自定义动作，比如安装软件等等
+6. 默认情况下，实例会等待一小时然后更新状态至 Pending:Proceed，然后再进入 InService 状态，如果想要更多时间你可以更改默认等待时间或如下面的 Notes 里第3条  
+  
+Notes：  
+* 你可以更改 heartbeat timeout，或者你可以在创建 Lifecycle Hook 时通过 CLI 定义 heartbeat timeout
+* 你可以调用 complete-lifecycle-action 命令以告诉 Auto Scaling Group 继续
+* 你可以调用 record-lifecycle-action-heartbeat 命令以为 timeout 增加时间
+* 48 小时是你可以保存实例、服务在 Wait 状态的最大时间，不管 heartbeats 怎么样  
+  
+Cooldowns：  
+* 帮助确保 Auto Scaling Group 没有启动、关停过多的实例
+* 开始于当实例进入 InService 状态时，所以当实例还留在 Pending:Wait 状态即你对其执行函数时，Auto Scaling 会继续等待并在此之后才会增添额外的服务器  
+  
+状态 Abandon 或 Continue：  
+* 在一个 Lifecycle Hook 的总结里，一个实例最终可能是状态 Abandon 或 Continue
+* Abandon 意味着实例失败，将导致 Auto Scaling Group 关停此实例并酌情考虑重新开通启动一个新实例
+* Continue 意味着实例成功，会在之后将实例放入服务群中  
+  
+Spot 实例：  
+* 你可以对 Spot 实例使用 Lifecycle Hook
+* 但不能阻止实例因为 Spot price 变更而被关停
+* 当 Spot 实例关停时，你必须仍完成 Lifecycle 动作  
+  
   
   
 ## 更多

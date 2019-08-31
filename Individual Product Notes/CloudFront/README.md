@@ -28,4 +28,5 @@ Content Delivery Network 的缩写，是一个可以基于用户物理地址选�
 Steps：  
 1. 在 CloudFront 控制台，点击创建 Distribution（并选择 Distribution 类型：Web 或 RTMP）。
 2. 新建 Distribution 的 Origin 设置（如域名即被分发源文件、数据的 URL、IP 地址如 S3 bucket、EC2 实例、自己的服务器文件等等；又如文件路径、安全与访问权限、自定义 HTML header、强制 HTTPS、设置 TTL、IPv6 等等，其中最重要的是 Origin Access Identify，这会强制所有用户不能直接访问、交互 origin 服务器的如 S3 bucket，而是先访问 Edge 服务器）。
-3. 等待一段时间等 provision 完成（前面的设置也可以在 provision 之后更新，包括增加 origin 等等）（在同一界面你可以进行手动的 Edge 缓存清楚操作，需额外费用）。
+3. 等待一段时间等 provision 完成（前面的设置也可以在 provision 之后更新，包括增加 origin 等等）（在同一界面你可以进行手动的 Edge 缓存清楚操作，需额外费用）。  
+PS：可以通过该 CloudFront Distribution 的 Behaviors 设置当需要引用、获取某些文件时（比如 HTML 里引用、指定路径的文件如 images/*、css/*）即搜寻、映射到另一个指定的文件来源（比如 S3 某 bucket 的某文件、图片等等）（在映射来源之前需先为该 CloudFront Distribution 增添该 S3 文件路径为一个新的 Origin）  

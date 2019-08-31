@@ -7,6 +7,7 @@
   
   
 ## A Cloud Guru
+Route53 是 Amazon 提供的高可用的 DNS 服务，如果其服务宕机，开发者用户可获得 credit 赔偿。  
 为什么叫 Route53？因为 DNS 在端口 53 操作执行。  
   
 ### DNS
@@ -45,4 +46,19 @@ Alias Record 与 CName 工作原理类似，即映射一个 DNS 域名（www.exa
 ### Exam Tips
 * ELB 没有预定义 IPv4 地址，所以需要使用其 DNS 域名（系统自动生成的）动态地获取其 IP 地址。所以如果设计网站流量门户为 ELB 的话，需要使用 Alias Record 映射网站域名以及 ELB 地址（因为 ELB 没有固定 IP 地址且其域名为裸域名）
 * 尽量现在使用 Alias Record 而不是 CName
-* 常见 DNS 类型还有 MX Record、PTR Record
+* 常见 DNS 类型还有 MX Record、PTR Record  
+  
+### Lab
+Route53 是 global 的服务没有 region。  
+  
+* Simple Routing Policy - 如果选择 Simple Routing Policy，就只能有一个记录（A Record）使其对应多个地址，因此 Route53 会随机地返回记录的一个值给用户
+* Weighted Routing Policy - 按比例分配 IP 地址给域名访问
+* Latency Routing Policy - 当对域名访问时，返回值取最低延迟、响应最快的 IP 地址。需要先为将服务的 ELB 或 EC2 创建延迟资源记录集，集里的值将会告诉 Route53 哪个 IP、服务器延迟最低
+* Failover Routing Policy - 
+* Geolocation Routing Policy - 根据用户地址分配 IP 地址
+* Geoproximity Routing Policy - 根据资源地址分配 IP 地址，并可选地在不同地区的资源之间切换
+* Multivalue Answer Routing Policy - 随机地 route 上至 8 个 IP 目的地  
+注意若已存在一个 Routing Policy 的 A Record，可能会无法创建另一个不同 Routing Policy 的 A Record，则需要删除前一个 Routing Policy 记录才能再创建新的 Routing Policy 记录。  
+  
+Route53 还提供 Traffic Flow 可视化，traffic policy 创建与 review 也支持可视化。  
+  
