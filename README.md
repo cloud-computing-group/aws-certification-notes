@@ -1,14 +1,15 @@
 # AWS证书学习笔记
 
 ## 白皮书
-running-containerized-microservices-on-aws 至 P11/P25  
+running-containerized-microservices-on-aws 至 P16/P25  
 aws-cloud-best-practices 至 P5/P42  
 microservices-on-aws 已完成  
+aws-devops 至 P17/P20  
   
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
-AWS Certified Developer Associate 至 `Beginners Guide to EC2 / EC2 101`，已完成章节 `S3` `Introduction to Serverless Computing` `Other AWS Services` `DynamoDB` 和 `Developer Theory`  
-AWS Certified SysOps Administrator Associate 至 `Networking / Failover Routing Policy Lab`，已完成章节 `Automation`  
+AWS Certified Developer Associate 除 `Beginners Guide to EC2` 外其余已完成  
+AWS Certified SysOps Administrator Associate 已完成  
 AWS Certified DevOps Engineer Professional 已完成  
 AWS Certified Big Data Specialty 至 `Domain 1 - Collection / Kinesis Streams Core Concepts`  
 注：笔记在学习 Developer、SysAdmin 和 DevOps 时做，Big Data Specialty 暂不做笔记或简要地做（先考试以后有空再补笔记）  

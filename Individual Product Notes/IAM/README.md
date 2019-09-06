@@ -97,3 +97,44 @@ IAM 控制台 - Credential Report：
 8. S3 使用 IAM 以确认身份验证信息被允许对给定的 S3 bucket 和 key 作请求操作
 9. IAM 告知 S3 请求合规、通过可以操作  
   
+### Advanced IAM Policies
+IAM 用来定义用户在 AWS 平台上的访问权限，有 3 种 IAM policy 类型：  
+* Managed Policy
+    * 是由 AWS 平台创建、管理的 Policy，用于基于平时工作岗位需要的常见应用场景，比如 AmazonDynamoDBFullAccess、AWSCodeCommitPowerUser、AmazonEC2ReadOnlyAccess 等等
+    * 由 AWS 默认提供的合适的权限，你可以直接使用其在一个或多个 user、role（甚至不同 AWS 账号的 role）、group 而无需自己写 policy 的 JSON 文件
+    * 此为 AWS 内置 Policy，你不能更改其定义
+* Customer Managed Policy
+    * 由开发者自己创建、定义、管理的 Policy
+    * 能且仅能用于同一 AWS 账号内的一个或多个 user、role、group
+    * 可以通过复制 Managed Policy、编写 policy JSON 文件来创建，建议在 Managed Policy 满足需求的情况下优先使用 Managed Policy
+* Inline Policy
+    * 此 IAM Policy 只嵌入到某个 user、role、group（一对一关系），因此当该 user 或 role 或 group 被删除时该 Policy 也随之删除
+    * 建议优先使用 Managed Policy 而非 Inline Policy
+    * 此 policy 好处在于防止某些权限不经意地分配给错误的 user、role、group
+    * 你可以提供 user、role、group 各自的页面上创建、添加、编辑他们的 Inline Policy  
+  
+### STS AssumeRoleWithWebIdentity
+* assume-role-with-web-identity 是 STS（Security Token Service）提供的一个 API
+* 返回临时安全凭证，用于用户在应用中身份认证（并可以与网络身份供应商 IDP 集成）
+* 如果用于开发手机应用，建议使用 Cognito
+* 常规 web 应用可以使用 STS assume-role-with-web-identity API  
+  
+### Cross Account Access
+跨账号访问可以更清晰地分割资源、服务，并带来更安全的管理。  
+跨账号访问可以让你更容易地在 AWS 控制台上随意切换账号或 Role 来进行工作，你可以以某个 IAM user 身份登录控制台然后在没有输入账号、密码的情况下切换到另一个账号。  
+https://docs.aws.amazon.com/zh_cn/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html  
+https://aws.amazon.com/cn/blogs/security/how-to-enable-cross-account-access-to-the-aws-management-console/  
+步骤：  
+* Identify our AWS Account numbers（总共需要一个 Developer 和一个 Production 账号）
+* 登录 Developer 账号，并创建一个 Developer group
+* 在新建的 group 里创建一个 user（John）（会得到一个登录地址）
+* 登录 Production 账号
+* 创建一个共享资源如 S3 bucket
+* 创建 "read-write-app-bucket" Policy（ARN 指向新建的 S3 bucket）
+* 创建 "MyDeveloperAccess" 跨账号 role（创建时在 role type 选项选择 `Role for Cross-Account Access`，并填入另一个 AWS 账号的账号 ID - 此例即 Developer 账号 ID）
+* 将 "read-write-app-bucket" Policy 添加给 "MyDeveloperAccess" Role
+* 登录 Developer 账号
+* 在 Developer group 上添加新的 Inline Policy / Customer Policy（Policy 的 Action 为 sts:AssumeRole Resource 的 ARN 指向 "MyDeveloperAccess" Role）
+* 登录 John，然后切换到 "MyDeveloperAccess" Role
+* 此时 Developer 账号的 IAM user - John 就可以访问 Production 账号的共享资源（S3 bucket）  
+  
