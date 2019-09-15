@@ -36,11 +36,12 @@
     * Partition Key - 又称 Hash Key，唯一性的 Attribute（比如 User ID、Email 等等）
         * Partition Key 值会被输入进一个内部哈希函数，然后函数输出值决定存储该数据的 partition 或物理地址
         * 如果使用 Partition Key 当作主键，则不会有主键重复问题
+        * 某 Partition Key 的 Item 上的所有数据（Attributes）在物理上存储在一起
     * Composite Key - （Partition Key + Sort Key）的组合
         * 比如同一个用户在论坛里发表多个信息
         * Composite Key 作为主键的话将由以下组成：
             * Partition Key - 如 User ID
-            * Sort Key - 又称 Range Key，如发帖的时间戳
+            * Sort Key - 又称 Range Key / Range Attribute，如发帖的时间戳
         * 不同的 Item 也许有相同的 Partition Key，但同时 Sort Key 就不可能相同
         * 所有有相同 Partition Key 的 Items 都存储在一起，然后按 Sort Key 值排序
         * 允许你存储多个有相同 Partition Key 的 Items  

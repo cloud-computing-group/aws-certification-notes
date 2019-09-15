@@ -4,7 +4,8 @@
 running-containerized-microservices-on-aws 至 P16/P25  
 aws-cloud-best-practices 至 P5/P42  
 microservices-on-aws 已完成  
-aws-devops 至 P17/P20  
+aws-devops 已完成  
+aws-development-test-environments 至 P6/P17  
   
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
@@ -15,7 +16,7 @@ AWS Certified Big Data Specialty 至 `Domain 1 - Collection / Kinesis Streams Co
 注：笔记在学习 Developer、SysAdmin 和 DevOps 时做，Big Data Specialty 暂不做笔记或简要地做（先考试以后有空再补笔记）  
   
 ## Linux Academy
-AWS Certified DevOps Engineer – Professional Level 至 `Auto Scaling Deployment Concepts / Deployment Concepts with Auto Scaling`  
+AWS Certified DevOps Engineer – Professional Level 至 `Deployment Concepts with EC2 / Using IAM Roles with EC2`  
   
 ## 其他
 ### Solutions Architect Associate
