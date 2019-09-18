@@ -1,11 +1,11 @@
 # AWS证书学习笔记
 
 ## 白皮书
-running-containerized-microservices-on-aws 至 P16/P25  
+running-containerized-microservices-on-aws 至 P17/P25  
 aws-cloud-best-practices 至 P5/P42  
 microservices-on-aws 已完成  
 aws-devops 已完成  
-aws-development-test-environments 至 P6/P17  
+aws-development-test-environments 至 P11/P17  
   
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
@@ -29,5 +29,8 @@ https://blog.codeship.com/querying-and-pagination-with-dynamodb/ 已完成
 </details>
   
 ### Useful Resources
-http://mistwire.com/2016/05/aws-certified-solutions-architect-associate-study-notes/  
+http://mistwire.com/2016/05/aws-certified-solutions-architect-associate-study-notes/ 已完成  
 https://www.whizlabs.com/  
+  
+https://interactive.linuxacademy.com/diagrams/DevopsDoctrine2019.html  
+https://acloud.guru/forums/aws-certified-devops-engineer-professional/discussion/-LIDHwC5d4rl57iMQmzW/Passed%20DevOps%20Pro%20-%20Exam%20Tips%20-%20Lessons%20Learned 已完成  

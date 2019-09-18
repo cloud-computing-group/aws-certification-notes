@@ -165,6 +165,12 @@ Spot 实例：
 * 但不能阻止实例因为 Spot price 变更而被关停
 * 当 Spot 实例关停时，你必须仍完成 Lifecycle 动作  
   
+## ELB 集成 ASG（Auto Scaling Group）
+1. 首先先创建 ELB（包括设置 EC2 实例的 health check）
+2. 创建 ASG 的 Launch Configuration
+3. 创建 ASG（设置其关联的 ELB，health check type 设置为 ELB 即使用 ELB 的 health check 策略）
+如此 ASG 就会定期按照 ELB 的 health check 检查 ASG 内的 EC2 实例，如果某个实例出现问题则另起新实例，ELB 则会自动将负载分配给 ASG 内的这些实例（无论新旧）。  
+  
   
   
 ## 更多

@@ -69,6 +69,9 @@ Pre-Warming 基于你预期的流量会配置 ELB 达到合适的 capacity 级�
 * SurgeQueueLength - 待处理请求数量，最大队列值为 1024，满了之后额外的请求会被拒绝（只适用于 CLB）
 * SpilloverCount - SurgeQueue 里满了之后被拒绝的请求数量（只适用于 CLB）（这个数字过高暗示了可能的性能问题，意味着可能需要扩展基础设施架构）  
   
+### ELB 安全
+为保证安全，应保证客户端到 ELB 之间的传输安全以及 ELB 到 EC2 实例之间的传输安全，具体做法是都将这些传输加密（HTTPS/SSL）（TLS/SSL 是 TCP 层面的安全机制、版本，就类似 HTTPS 与 HTTP 的关系）。  
+  
   
   
 ## CSAA Test Notes:  
