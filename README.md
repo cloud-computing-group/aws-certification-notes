@@ -1,16 +1,16 @@
 # AWS证书学习笔记
 
 ## 白皮书
-running-containerized-microservices-on-aws 至 P20/P25  
-aws-cloud-best-practices 至 P7/P50  
-microservices-on-aws 已完成  
-aws-devops 已完成  
-aws-development-test-environments 至 P14/P17  
-infrastructure-as-code 至 P5/P39  
+《running-containerized-microservices-on-aws》 已完成  
+《aws-cloud-best-practices》 至 P7/P50  
+《microservices-on-aws》 已完成  
+《aws-devops》 已完成  
+《aws-development-test-environments》 已完成（建议多复习）  
+《infrastructure-as-code》 至 P7/P39（建议多复习）  
   
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
-AWS Certified Developer Associate 除 `Beginners Guide to EC2` 外其余已完成  
+AWS Certified Developer Associate 已完成（`Beginners Guide to EC2` `Updates Based On Student Feedback` 未做笔记）  
 AWS Certified SysOps Administrator Associate 已完成  
 AWS Certified DevOps Engineer Professional 已完成  
 AWS Certified Big Data Specialty 至 `Domain 1 - Collection / Kinesis Streams Core Concepts`  
@@ -24,15 +24,19 @@ AWS Certified DevOps Engineer – Professional Level 至 `DynamoDB Concepts / Dy
 ### Solutions Architect Associate
 《AWS Certified Solutions Architect Official Study Guide》 至 P56/P487  
   
-### DynamoDB
-https://blog.codeship.com/querying-and-pagination-with-dynamodb/ 已完成  
+### AWS Docs
+已完成如下：  
 <details>
-    <summary>https://docs.aws.amazon.com/amazondynamodb</summary>
-    https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html 已完成  
+    <summary>DynamoDB</summary>
+    https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html
+</details>
+<details>
+    <summary>RDS</summary>
+    https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html
 </details>
   
 ### FAQs
-https://aws.amazon.com/cloudformation/faqs/ 未完成  
+https://aws.amazon.com/cloudformation/faqs/ 已完成  
   
 ### Useful Resources
 http://mistwire.com/2016/05/aws-certified-solutions-architect-associate-study-notes/ 已完成  
@@ -40,3 +44,5 @@ https://www.whizlabs.com/
   
 https://interactive.linuxacademy.com/diagrams/DevopsDoctrine2019.html  
 https://acloud.guru/forums/aws-certified-devops-engineer-professional/discussion/-LIDHwC5d4rl57iMQmzW/Passed%20DevOps%20Pro%20-%20Exam%20Tips%20-%20Lessons%20Learned 已完成  
+  
+https://blog.codeship.com/querying-and-pagination-with-dynamodb/ 已完成  
