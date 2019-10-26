@@ -40,7 +40,32 @@ AWS Certified DevOps Engineer – Professional Level 至 `DynamoDB Concepts / Dy
 </details>
   
 ### FAQs
-https://aws.amazon.com/cloudformation/faqs/ 已完成  
+* Serverless
+    * https://aws.amazon.com/lambda/faqs/
+    * https://aws.amazon.com/api-gateway/faqs/
+    * https://aws.amazon.com/dynamodb/faqs/
+    * https://aws.amazon.com/elasticache/faqs/
+    * https://aws.amazon.com/s3/faqs/
+* Automation & Monitoring
+    * https://aws.amazon.com/elasticbeanstalk/faqs/
+    * https://aws.amazon.com/cloudformation/faqs/ 已完成
+    * https://aws.amazon.com/cloudwatch/faqs/
+    * https://aws.amazon.com/x-ray/faqs/
+* Dev Tools
+    * https://aws.amazon.com/codecommit/faqs/
+    * https://aws.amazon.com/codepipeline/faqs/
+    * https://aws.amazon.com/codedeploy/faqs/
+    * https://aws.amazon.com/codebuild/faqs/
+* Containers
+    * https://aws.amazon.com/ecs/faqs/
+    * https://aws.amazon.com/ecr/faqs/
+* Security
+    * https://aws.amazon.com/iam/faqs/
+    * https://aws.amazon.com/cognito/faqs/
+    * https://aws.amazon.com/kms/faqs/
+* Messaging & Streaming
+    * https://aws.amazon.com/sqs/faqs/
+    * https://aws.amazon.com/kinesis/faqs/
   
 ### Useful Resources
 http://mistwire.com/2016/05/aws-certified-solutions-architect-associate-study-notes/ 已完成  
