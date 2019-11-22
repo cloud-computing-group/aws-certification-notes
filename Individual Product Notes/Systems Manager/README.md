@@ -37,6 +37,7 @@ Lab 步骤：
   
 ### 其他
 AWS Systems Manager（SSM 是免费的，你只需为使用时所用资源付费）  
+更多参考：https://aws.amazon.com/cn/systems-manager/pricing/  
   
 ### AWS Systems Manager Parameter Store
 场景：你在银行里做系统管理，你需要保存机密信息如用户、密码、许可证 Key 等等。这些信息需要传递给 EC2 实例比如进行一些启动脚本，但有用同时保证信息安全不外泄。因此 AWS Systems Manager Parameter Store 帮助你做到这点。  
