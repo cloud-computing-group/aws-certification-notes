@@ -21,7 +21,9 @@
 * 管理你的 AWS 或 On-premises 应用
 * 设计 layers 执行不同功能，比如负载均衡、数据库、应用服务等等
 * 支持 Auto Scaling 和 Scheduled Scaling
-* 使用 Chef Solo
+* 使用 Chef Solo  
+基于云的计算通常涉及各组 AWS 资源，如 EC2 实例和 Amazon Relational Database Service (RDS) 实例。例如，一个 Web 应用程序通常需要应用程序服务器、数据库服务器、负载均衡器以及其他资源。此组实例通常称为堆栈。  
+层代表一组服务特定目的 (如提供应用程序服务或承载数据库服务器) 的 EC2 实例。  
   
 #### Chef
 * OpsWorks Stacks/Chef 是声明式状态引擎  

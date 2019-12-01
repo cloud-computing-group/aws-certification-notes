@@ -55,7 +55,7 @@ Source Stage (AWS CodeCommit) -> Deploy Stage (Development) (AWS CodeDeploy -> A
     * 比 rolling deployment 更快且更少步骤
 * Rolling Deployment : (极好的自动化与编排，与 Minimum in-service Deployment 类似，不同的只是每阶段都按指定数量目标进行部署)
     * 部署发生在多个阶段，每次部署的目标数量按你指定的执行
-    * moving part，要求有编排与健康检查，健康检车结果可以定义后续动作（比如暂停、fail 掉此阶段、回滚整个部署等等）
+    * moving part，要求有编排与健康检查，健康检查结果可以定义后续动作（比如暂停、fail 掉此阶段、回滚整个部署等等）
     * 不一定维持整体可用性健康（只要有编排引擎，部署的健康检查只针对某个目标，但现今较为先进的引擎可以观察应用架构的全局的健康、状态，因此可基于此在部署中进行后续决策）
     * 基于时间上这是最低效的部署方式
     * 支持自动化测试，目标会被先访问与测试再继续进行部署
@@ -170,6 +170,19 @@ Spot 实例：
 2. 创建 ASG 的 Launch Configuration
 3. 创建 ASG（设置其关联的 ELB，health check type 设置为 ELB 即使用 ELB 的 health check 策略）
 如此 ASG 就会定期按照 ELB 的 health check 检查 ASG 内的 EC2 实例，如果某个实例出现问题则另起新实例，ELB 则会自动将负载分配给 ASG 内的这些实例（无论新旧）。  
+  
+## CloudFormation vs OpsWorks vs Elastic Beanstalk
+CloudFormation 更关注于 AWS 云资源或基础设施上的服务开通、部署或更新，OpsWorks 更关注于配置方面（如操作系统、应用等层面的安装、更新）但也可用于云资源的服务开通、部署（如 ELB、ASG、EC2、RDS 等等），EB 则让开发者更多关心应用、代码的开发而无需操心云资源的管理与部署。  
+  
+相比 CloudFormation，OpsWorks 除了可以服务开通、部署，还可以做 ongoing changes，所以当你需要做的是部署应用程序并更新其相关实例时，你应该使用后者 - OpsWorks。  
+当你的企业应用将使用大量 AWS 云资源或服务（包括 EC2）时，你应该同时结合使用 CloudFormation 与 OpsWorks（可以编写在 CloudFormation 里）。  
+结合使用 CloudFormation 与 OpsWorks 场景：在 CloudFormation 里开通、部署云资源与服务，通过 OpsWorks 对操作系统或基础设施做细节配置；在 CloudFormation 里更新云资源、服务、基础设施，通过 OpsWorks 更改如操作系统、应用程序。  
+使用 EB：你可能需要一些额外的云服务或不受 EB 管制的数据库，那你可以通过 CloudFormation 来配置管理、部署 EB 及那些与 EB 解耦的云服务。  
+（https://searchaws.techtarget.com/tip/When-to-use-AWS-OpsWorks-vs-CloudFormation-or-Elastic-Beanstalk）  
+  
+OpsWorks 支持 Chef 与 Puppet，但不支持 Ansible。  
+Chef / Puppet / Ansible 是自动化运维，减少手工运维，使用 DSL 或 YAML 来进行配置 - 简单明了友好，又或添加了更多的标准、规范从而使得不同组、人员都能配置得更加一致、安全、有保障，又或有更高级的 Declarative configuration 即声明式运维（https://my.oschina.net/zjzhai/blog/600430）与普通 shell 脚本不同其可在单个命令里可能已经集成多个 shell 命令，从而省却了许多 shell 的重复工作且自动处理执行错误失败等情况。题外话，可以把 Docker 当作一个更先进的声明式运维。  
+关于 shell 与 Chef / Puppet / Ansible 的相似与对比（http://www.voidcn.com/article/p-tofzyzje-btv.html）  
   
   
   
