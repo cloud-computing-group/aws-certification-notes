@@ -106,3 +106,5 @@ AMI 拥有者需要给予另一个 AWS 账号权限，那个账号才能从 EBS 
 * billingProducts code 用于支付比如 Windows Server 或 SQL Server 一类的使用许可
 * 不能直接复制 billingProducts code 但是可以通过共享 AMI 启动一个实例然后再基于该实例创建 AMI 来复制此信息  
   
+### 弹性 IP 地址
+请多复习：https://docs.aws.amazon.com/zh_cn/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html  
