@@ -14,6 +14,10 @@ Step Function 提供了一个图形控制台，可以让开发者可视化、测
   
 要删除掉已有的 Step Function，可以在 CloudFormation 控制台，删除掉相关的 CloudFormation template 即可。
   
+### 状态机
+Step function 的可视化经常看到类似状态机模型，其实它就是实现状态机逻辑系统的好方法（Step Function + Amazon States Language 极大地简化、适合状态机逻辑设计），而如果自己通过其他 AWS 计算资源（如 EC2 、纯 Lambda 或容器等等）从零完整进行状态机系统软件设计的话可能会麻烦且复杂化。  
+参考：https://docs.aws.amazon.com/zh_cn/step-functions/latest/dg/amazon-states-language-state-machine-structure.html  
+  
 ### Tips
 * Great way to visualize your serverless application.
 * Step Functions automatically triggers and tracks each step.
