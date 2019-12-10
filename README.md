@@ -53,7 +53,7 @@ AWS Certified DevOps Engineer – Professional Level 至 `DynamoDB Concepts / Dy
     * https://aws.amazon.com/x-ray/faqs/
 * Dev Tools
     * https://aws.amazon.com/codecommit/faqs/
-    * https://aws.amazon.com/codepipeline/faqs/
+    * https://aws.amazon.com/codepipeline/faqs/ 已完成
     * https://aws.amazon.com/codedeploy/faqs/
     * https://aws.amazon.com/codebuild/faqs/
 * Containers
