@@ -5,6 +5,7 @@ Serverless Architecture 的关键组件包括:
 * 数据库（比如 DynamoDB、RDS）
 * Lambda Function（包括 Step Function）
 * 身份认证及授权服务、身份安全服务（比如 Cognito、Auth0、Active Directory、IAM）
+* STS (Security Token Service) 允许用户/客户有限制地临时性地访问 AWS 资源
 * 第三方平台、线上软件或 SaaS（比如 CRM、支付系统，其他云服务、平台）
 * CDN 及负载均衡
 * On-Premise
