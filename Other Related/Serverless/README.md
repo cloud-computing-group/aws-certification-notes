@@ -9,7 +9,7 @@ Serverless Architecture 的关键组件包括:
 * CDN 及负载均衡
 * On-Premise
 * 消息队列服务（比如 SQS）
-* 数据流服务（比如 Kinesis）
+* 流数据服务（比如 Kinesis）
 * 推送服务（比如 SNS、SES、SMS）
 * 缓存服务（比如 Elastic Cache Redis）
 * 其他容器微服务或 monolith
