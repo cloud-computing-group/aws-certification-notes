@@ -1,0 +1,14 @@
+### Q1
+
+### Q2
+
+### Q3
+Your system automatically provisions EIPs to EC2 instances in a VPC on boot. The system provisions the whole VPC and stack at once. You have two of them per VPC. On your new AWS account, your attempt to create a Development environment failed, after successfully creating Staging and Production environments in the same region. What happened?
+A. You didn’t choose the Development version of the AMI you are using.
+B. You didn’t set the Development flag to true when deploying EC2 instances.
+C. You hit the soft limit of 5 EIPs per region and requested a 6th.
+D. You hit the soft limit of 2 VPCs per region and requested a 3rd.
+### Answer
+C
+(https://docs.aws.amazon.com/zh_cn/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html
+https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/amazon-vpc-limits.html)
