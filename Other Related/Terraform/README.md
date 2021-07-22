@@ -22,6 +22,9 @@ After finish terraform coding (pre-request the machine which run the following c
 `terraform apply` (type "yes")  
 `terraform destroy` (destroy)  
   
+## Core Concept
+![](./Terraform%20Workflow.png)  
+  
 ## Tips
 Enable verbose output logging for Terraform commands using TF_LOG=TRACE:  
 `export TF_LOG=TRACE`  
