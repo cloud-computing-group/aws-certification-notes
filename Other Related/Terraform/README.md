@@ -24,6 +24,7 @@ After finish terraform coding (pre-request the machine which run the following c
   
 ## Core Concept
 ![](./Terraform%20Workflow.png)  
+![](./Terraform%20Workflow%201.png)  
   
 ## Tips
 Enable verbose output logging for Terraform commands using TF_LOG=TRACE:  
