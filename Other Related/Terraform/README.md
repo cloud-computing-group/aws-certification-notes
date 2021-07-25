@@ -29,7 +29,16 @@ After finish terraform coding (pre-request the machine which run the following c
 ![](./Terraform%20Workflow%20Apply.png)  
 ![](./Terraform%20Workflow%20Destroy.png)  
   
+## Syntax
+![](./Terraform%20Syntax%20Provider.png)  
+![](./Terraform%20Syntax%20Built-in%20Function.png)  
+![](./Terraform%20Syntax%20Resource.png)  
+![](./Terraform%20Syntax%20Data%20Source.png)
+  
 ## Tips
 Enable verbose output logging for Terraform commands using TF_LOG=TRACE:  
 `export TF_LOG=TRACE`  
 Note: You can turn off verbose logging at any time using the `export TF_LOG=` command.  
+  
+Customized Provider:  
+![](./Terraform%20Customized%20Provider.png)  
