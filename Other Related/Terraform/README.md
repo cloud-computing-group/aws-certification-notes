@@ -24,6 +24,15 @@ Since the Terraform version is returned, you have validated that the Terraform b
 ## Usage
 After finish terraform coding (pre-request the machine which run the following command have set IAM permission already):  
 * `terraform init` (This is the first command that should be run after writing a new Terraform configuration or cloning an existing one from version control. It is safe to run this command multiple times, the terraform init command is the very first command that you'll run to fetch required dependencies, such as providers; it initializes and sets up the working directory containing your Terraform code; it does in fact help configure and set up the backend which will store the state file.)  
+  * ![](./Terraform%20Download%20Providers.png)
+  * ```
+    ### main.tf with AWS example
+    provider "aws" {
+        version = "3.7.0"
+        region  = "us-east-1"
+    }
+    ```
+  * Run `terraform init` with `export TF_LOG=TRACE` will then see `- Installing hashicorp/aws v3.7.0...`
 * `terraform plan` (The terraform plan command goes through the code and creates a plan of execution on which the apply command acts.)  
 * `terraform apply` (type "yes")  
 * `terraform destroy` (destroy, the terraform destroy command cleans up and deletes all infrastructure tracked in the state file. It is a destructive command which deletes all resources being tracked via the Terraform state file.)  
