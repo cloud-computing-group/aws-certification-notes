@@ -32,7 +32,7 @@ After finish terraform coding (pre-request the machine which run the following c
         region  = "us-east-1"
     }
     ```
-  * Run `terraform init` with `export TF_LOG=TRACE` will then see `- Installing hashicorp/aws v3.7.0...`
+  * Run `terraform init` with `export TF_LOG=TRACE` will then see provider download `- Installing hashicorp/aws v3.7.0...` (it will be saved in hidden folder `.terraform`)
 * `terraform plan` (The terraform plan command goes through the code and creates a plan of execution on which the apply command acts.)  
 * `terraform apply` (type "yes")  
 * `terraform destroy` (destroy, the terraform destroy command cleans up and deletes all infrastructure tracked in the state file. It is a destructive command which deletes all resources being tracked via the Terraform state file.)  
@@ -40,11 +40,21 @@ After finish terraform coding (pre-request the machine which run the following c
 The recommended Terraform workflow is to write the code (Write), review it (Plan), and then execute/deploy the code (Apply).  
   
 ## Core Concept
+### Workflow
 ![](./Terraform%20Workflow.png)  
 ![](./Terraform%20Workflow%20Init.png)  
 ![](./Terraform%20Workflow%20Plan.png)  
 ![](./Terraform%20Workflow%20Apply.png)  
 ![](./Terraform%20Workflow%20Destroy.png)  
+  
+### State
+![](./Terraform%20State.png)  
+  
+![](./Terraform%20State%20Mechanism.png)  
+If want to delete all resources have been created, instead of write code to delete separately or manually delete it, we could just use `terraform destroy` command. So it is important to well modularize/organize the terraform codes to make life easier.  
+  
+![](./Terraform%20State%20Management.png)  
+By default, terraform state file will be stored within the same directory where the terraform codes reside. For better integrity and availability, it can also be stored remotely.  
   
 ## Syntax
 ![](./Terraform%20Syntax%20Provider.png)  
