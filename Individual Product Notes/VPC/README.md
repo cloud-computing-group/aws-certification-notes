@@ -15,7 +15,7 @@
 VPC 定义：AWS Virtual Private Cloud 让你开通一个 AWS 云的逻辑上独立且相互隔离的部分、区域，在这个部分、区域内你可以定义一个虚拟网络并在上面启动 AWS 资源，你对你的虚拟网络环境有着完全的控制：包括选择你的 IP 地址范围、创建子网、配置路由表与网关。你可以很容易地为 VPC 自定义网络配置，比如你可以为需要连接互联网的服务器创建一个面向公共的子网，然后把后端系统、数据库、应用服务们放在私有子网以规避互联网访问，另外 VPC 还提供了多层次安全的应用 - 包括安全组和网络 ACL 来帮助控制、管理、限制每个子网的 AWS EC2 实例的访问。  
 你还可以创建硬件、物理层面的 VPN 连接你的已有数据中心到 VPC 上，从而达到通过 AWS 云扩展你的数据中心的目的。  
   
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Individual%20Product%20Notes/VPC/VPC%20with%20Public%20&%20Private%20Subnet(s).png)  
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/VPC/VPC%20with%20Public%20&%20Private%20Subnet(s).png)  
 （注意上图的 SN 即代表子网 subnet）一个子网总是等于一个 AZ，安全组可以扩展子网（比如 Bastion Host / Jumpbox），一个 region 可以有多个 VPC（默认限制 5 个，但可以发邮件向 AWS 额外申请该 region 的更多 VPC 的额度）。  
 右上方显示的是 AWS 内置允许你使用的几类内部 IP 地址范围：  
 * 10.0.0.0 - 10.255.255.255（10/8 prefix）

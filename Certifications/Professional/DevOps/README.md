@@ -134,7 +134,7 @@ Auto Scaling Lifecycle：
 2. 结束于关停一个实例时
 3. 结束于 Auto Scaling Group 将一个实例抽出服务群并将其关停时  
   
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Certifications/Professional/DevOps/Auto%20Scaling%20Lifecycle.png)  
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Certifications/Professional/DevOps/Auto%20Scaling%20Lifecycle.png)  
 上图的黄色块即 Lifecycle Hook，Lifecycle Hook 允许你在该 Hook 的特属时段内进行一些自定义动作，触发动作如在 Pending Hook 安装软件或在 Terminating Hook 复制并备份实例日志数据。  
   
 Lifecycle Hook 是如何工作的：  

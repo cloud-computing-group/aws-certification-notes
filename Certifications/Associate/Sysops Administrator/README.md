@@ -48,7 +48,7 @@ Scalability - Scale Out Infrastructure（长期方案）
 注：RDS 没有 Elasticity 但是 Aurora 有（Aurora Serverless）  
   
 ### Trouble Shooting Potential Autoscaling Issues
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Certifications/Associate/Sysops%20Administrator/Trouble%20Shooting%20Potential%20Autoscaling%20Issues.png)  
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Certifications/Associate/Sysops%20Administrator/Trouble%20Shooting%20Potential%20Autoscaling%20Issues.png)  
   
 ### Encryption & Downtime
 对于大部分 AWS 资源，加密只能在创建时启用。  
@@ -200,7 +200,7 @@ Hypervisors（虚拟机监视器）又称 virtual machine monitor（VMM），是
 一些实例如 C5 类型实例如今运行在 KVM 上，意味着现在不是所有的实例都是基于 Xen 了，目前 AWS 未正式宣布 Hypervisors 迁移计划，可以继续关注。  
   
 #### Isolation
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Certifications/Associate/Sysops%20Administrator/Hypervisors%20&%20Security%20Group%20etc%20Isolation.png)  
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Certifications/Associate/Sysops%20Administrator/Hypervisors%20&%20Security%20Group%20etc%20Isolation.png)  
   
 #### 对 Hypervisors 的访问
 管理员若有访问管理面板（Hypervisors）业务需求，可以通过使用 MFA 获得访问 propose-built administration hosts 的权限。这些 administration hosts 是一些特别定制设计、配置、创建的系统，这些系统强化了对云管理面板（Hypervisors）的保护。所有这些访问都会被日志记录、审计。当管理员不再有访问管理面板的业务需要时，对这些 hosts 及相关系统的特权访问应被撤销。  

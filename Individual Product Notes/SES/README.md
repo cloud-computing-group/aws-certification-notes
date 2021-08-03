@@ -7,7 +7,7 @@ SES 也可以用来接收邮件：接收到的邮件自动存放在 S3 中。
   
 ### SES VS SNS
 SES 是 Email only 的，不是基于订阅机制的，只需要邮箱地址即可。  
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Individual%20Product%20Notes/SES/SES%20VS%20SNS.png)
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/SES/SES%20VS%20SNS.png)
   
 ### SES use case
 * 自动化邮件

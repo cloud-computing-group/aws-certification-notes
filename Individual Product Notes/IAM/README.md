@@ -84,7 +84,7 @@ IAM 控制台 - Credential Report：
   
 一个场景：  
 你托管了一个网站在 EC2 实例且在你的 VPC 上。用户通过他们在公司总部的 Active Directory 服务器上的身份登录网站以进行认证、授权分析，你的 VPC 通过安全 IPSEC VPN 连接到该公司总部，一旦成功登录，用户将可以且只可以访问其个人所属的 S3 bucket。请问实现这一场景需求。  
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Individual%20Product%20Notes/IAM/Scenario%20Solution.png)
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/IAM/Scenario%20Solution.png)
   
 步骤如下：  
 1. 用户输入账号名和密码

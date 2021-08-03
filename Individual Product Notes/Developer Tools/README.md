@@ -62,7 +62,7 @@ AWS 自动管理的 CICD 服务，它全自动、易用、可配置（添加自�
 ### Testing
 测试通常包含以下几点：能保证满足定义、声明的要求，保证代码在指定时间内执行完成，保证程序可用，保证对所有输入正确响应，达到开发者想要的结果。  
 测试类型有多种：  
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Individual%20Product%20Notes/Developer%20Tools/Test%20Types.png)
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/Developer%20Tools/Test%20Types.png)
   
 #### 自动测试
 自动执行测试，对比实际输出与预估输出，快速、持续地反馈，实时提示信息，节省资源、时间。自动测试可以包含单元测试。  

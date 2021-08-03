@@ -31,12 +31,12 @@ SQS 的队列是 region 的。
 ### 更多
 AWS 应用案例模型：  
 1. SQS 不支持优先机制，但你可以通过服务开通两个或多个队列来实现（比如 consumer 应用优先拉取队列 1 ，若无新消息才拉取队列 2 中的消息）。  
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Individual%20Product%20Notes/SQS/SQS%20Priority.png)
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/SQS/SQS%20Priority.png)
   
 2. 应用前端等待用户上传图片与字符串，图片上传至 S3 后触发 Lambda 函数（或者也可以是 EC2 实例与前端合作的后端）把相关数据（字符串、图片所在 S3 bucket 地址、其他比如处理动作信息）输入到 SQS 中，一个持续运行 EC2 实例不断拉取 SQS 的消息一旦获取到消息则开始进行处理，最终 EC2 实例从 S3 中获取该图片并用字符串给图片打上水印并存放回 S3 中或返回给用户。  
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Individual%20Product%20Notes/SQS/SQS%20Usage%20Example.png)
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/SQS/SQS%20Usage%20Example.png)
   
 3. Fanout 结构执行并行处理逻辑，这里需要多个 SQS 队列订阅同一个 SQS topic 以实现。  
-![](https://github.com/cloud-computing-group/aws-certification-notes/blob/master/Individual%20Product%20Notes/SQS/SQS%20Fanout.png)
+![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/SQS/SQS%20Fanout.png)
   
 注：可以把 SQS 和 Auto Scaling Group 集成并由 ASG 监控（比如如果 SQS 消息过多 ASG 服务开通更多的 EC2 实例去处理 SQS 中的消息）。
