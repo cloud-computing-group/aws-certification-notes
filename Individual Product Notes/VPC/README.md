@@ -17,7 +17,7 @@ VPC 定义：AWS Virtual Private Cloud 让你开通一个 AWS 云的逻辑上独
   
 ![](https://github.com/cloud-computing-group/aws-certification-notes/blob/default/Individual%20Product%20Notes/VPC/VPC%20with%20Public%20&%20Private%20Subnet(s).png)  
 （注意上图的 SN 即代表子网 subnet）一个子网总是等于一个 AZ，安全组可以扩展子网（比如 Bastion Host / Jumpbox），一个 region 可以有多个 VPC（默认限制 5 个，但可以发邮件向 AWS 额外申请该 region 的更多 VPC 的额度）。  
-右上方显示的是 AWS 内置允许你使用的几类内部 IP 地址范围：  
+右上方显示的是 AWS 内置允许你使用的几类内部 IP 地址（[私有地址](https://github.com/yihaoye/stem-notes/blob/master/e-computer-network/computer_networks_101.md#%E7%A7%81%E6%9C%89%E5%9C%B0%E5%9D%80)）范围：  
 * 10.0.0.0 - 10.255.255.255（10/8 prefix）
 * 172.16.0.0 - 172.32.255.255（172.16/12 prefix）
 * 192.168.0.0 - 192.168.255.255（192.168/16 prefix）  
@@ -112,7 +112,47 @@ Elastic Network Interface（ENI）：https://docs.aws.amazon.com/zh_cn/AWSEC2/la
 需要熟悉如何通过 CIDR 计算出 Netmask、First IP、Last IP、可用 IP 数量等等。  
 VPC 的子网的最大 size 是 /16，最小 size 是 /28。  
 AWS 默认每个子网占用 5 个 IP 地址，所以比如题目考核某个子网需要 X 个 IP 可用，请问最小 CIDR 为多少时要记得把此情况考虑进去。  
+[CIDR 详解](https://github.com/yihaoye/stem-notes/blob/master/e-computer-network/computer_networks_101.md#cidr)  
 
 ### Direct Connect Gateway
 之前知道，自定义网络（如 on-primise）要快速、低延迟、独占地连接 AWS 时需要 Direct Connect Connection（物理），如果该自定义网络想相同地连接 AWS 其他几个 region 的网络时则无需再一一建立 Direct Connect Connection，只需 AWS 云平台上不同 region 上的 VPC 间使用 Direct Connect Gateway 即可，自定义网络可以通过 Direct Connect Connection 连接的 region 间接地连接到其他 region（通过它们之间的 Direct Connect Gateway）。  
   
+## AWS 子网划分策略
+当创建一个 VPC 时，需要指定它的 VPC CIDR。我们创建的是私有网络，所以  VPC CIDR 可以从私有地址里任意选择。但是如果是在设计一个大的组织的网络，那么就需要按需分配你的 VPC CIDR，这是因为在大型组织里，经常会遇到两个 VPC 需要不经过共有网络实现互联，这需要两个 VPC CIDR 没有冲突。  
+假设现在有一个 A 类子网地址：10.0.0.0/16，这个地址前 16 位是网络部分，后 16 位是主机部分。如果不继续对这个子网进行子网划分的话那么这个网络可以容纳 2^16-2（65534）台主机。为了便于网络管理、减少 IP 地址浪费和减少网络广播风暴，需要继续进行子网划分。  
+  
+进入真实的项目情景中。通常情况下一个项目会用 3 个部署环境：  
+* Dev（开发环境）
+* Staging（类生产环境）
+* Production（生产环境）
+  
+如果服务需要支持 Production 环境 Region 级别的 High Availability (高可用性)，比如需要同时部署在 Tokyo Region 和 Singapore Region 以提供高可用性，那么 Production 环境就包含了 Tokyo 和 Singapore 两 Region。为了实现环境之间的隔离，每个独立的环境都会创建独立的 VPC，对这个项目来说，需要创建 4 个 VPC：  
+* Dev Singapore（开发环境）
+* Staging Singapore（类生产环境）
+* Production Tokyo（生产环境）
+* Production Singapore（生产环境）
+  
+每个子网必须完全位于一个 Availability Zones (可用区)内，并且不能跨越区域。通常，在一个 VPC 中会创建 3 种类型的 VPC Subnet：  
+* Public Subnet
+* NAT Subnet
+* Private Subnet
+  
+为了提供 High Availability (高可用性)，通常会把服务部署在多个 Availability Zones 上。  
+  
+**子网划分策略**  
+一开始划分子网时，要考虑以后有其他的环境要创建怎么办？不能上来就把 VPC 的地址全部划分完。  
+最好的办法就是按需划分网络，为了按需划分网络，得提前预估网络需要容纳多少台主机。  
+如果的每个 VPC Subnet 网络需要容纳 100 台主机。通过计算：2^7 - 5 = 123 > 100，得知主机位需要 7 位就可以满足需求。主机部分 7 位，则网络部分 25 位。  
+若每个 VPC 是由 6 个 VPC Subnet 组成，通过计算：2^3 = 8 > 6，所以 VPC CIDR 网络部分需 25 - 3 = 22 位，主机部分 10 位：  
+VPC CIDR                | 网络部分                          | 主机部分
+------------------------| -------------------------------- | ----------------
+Dev VPC                 | 00001010   00000000 000000       | 00 00000000
+Staging VPC             | 00001010   00000000 000001       | 00 00000000
+Production Singpore VPC | 00001010   00000000 000010       | 00 00000000
+Production Tokyo VPC    | 00001010   00000000 000011       | 00 00000000
+
+将 10.0.0.0/16 划分成了 2^6 = 64 个 /22 的子网，即只使用了其中的 4 个 /22 的子网。  
+To be continue...  
+
+## 参考
+[AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
