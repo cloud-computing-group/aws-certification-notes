@@ -91,8 +91,9 @@ NAT Gateway 相比 NAT 实例更好处理单点故障问题更高可用等等。
 **安全组规则**  
 下表介绍了安全组的入站和出站规则。你将自行添加入站规则。出站规则是默认规则，它允许发送到任何地址的出站通信 — 你无需自行添加此规则。  
 ![](./Security%20Group%20Rules.png)  
-
+  
 ### Network ACL (NACL)
+全称：网络访问控制列表 (ACL) 。  
 一个网络 ACL 只能属于一个 VPC，不能跨 VPC。  
 VPC 的主默认网络 ACL 默认允许所有的 inbound 和 outbound 流量，自定义创建的网络 ACL，默认是阻止所有的 inbound 和 outbound 流量直到你添加自定义 Rules。  
 VPC 的每个子网都必须关联一个网络 ACL，如果你不显式地关联子网到某个网络 ACL，则该子网会自动关联到默认的网络 ACL。  
@@ -111,21 +112,36 @@ PS：https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/vpc-network-acls.htm
   
 ### 安全组与网络 ACL 的区别
 安全组：  
-* 是 EC2 的防火墙
-* Stateful（任意 incoming 规则都会自动应用到 outgoing 规则，比如允许 80 端口接收则也会允许 80 端口输出）
+* 是 EC2（更确切地说是绑定 Network Interfaces ENIs）的防火墙
+* Stateful（incoming 规则都会应用到同一个会话的 outgoing 流量，比如允许 80 端口监听接收则也会允许同一个会话的 80 端口响应输出，即使其设置规则阻止 80 端口输出）
+  * Traffic generated in response to allowed traffic in one direction is allowed to flow in the opposite direction. This doesn’t mean that the response flow is allowed in itself, i.e. combination of source and destination port must correspond to a previously generated “allowed” traffic, otherwise, any such traffic will be blocked. More precisely, this last bit is what actually represents the “state” monitoring capability of the firewall.
 * 支持 allow 规则，不支持 deny 规则（因为默认规则为全部 deny）
-* 较 NACL 晚执行（安全组属于实例层，较内部层），因此也级别优先度更高（比如某规则 NACL 允许了但是安全组不允许则该实例仍是不允许规则）
+* 在决定是否允许数据流前评估所有规则
+* 对于 inbound/ingress traffic，安全组是第二层 defense layer；对于 outbound/egress traffic，安全组是第一层 defense layer
 * 一个实例可以有多个安全组
-
+* 只有在启动实例的同时指定安全组、或稍后将安全组与实例关联的情况下，操作才会被应用到实例
+  
 NACL：  
-* 是子网的防火墙
+* 是 VPC 子网的防火墙
 * Stateless（incoming 规则与 outgoing 规则没有 Stateful 的关联关系）
-* 支持 allow 和 deny 规则
-* 较安全组先执行（NACL 属于子网层，较外围），因此也级别优先度更低
+* 支持 allow 和 deny 规则（default ACL 默认允许所有 inbound 和 outbound 流量，但是自定义的 ACL 默认不允许任何 inbound 和 outbound 流量）
+* 在决定是否允许流量时，按顺序处理规则，从编号最低的规则开始
+* 对于 inbound/ingress traffic，NACL 是第一层 defense layer；对于 outbound/egress traffic，NACL 是第二层 defense layer
 * 一个子网只能有一个 NACL
+* 自动应用于与之关联的子网中的所有实例（因此，如果安全组规则过于宽松，它提供额外的防御层）
   
-[Ref](https://medium.com/awesome-cloud/aws-difference-between-security-groups-and-network-acls-adc632ea29ae)  
+下图展示了由安全组和网络 ACL 提供的安全层。例如，来自互联网网关的数据流会使用路由表中的路由，路由到合适的子网。与子网关联的网络 ACL 规则控制允许进入子网的数据流。与实例关联的安全组规则控制允许进入实例的数据流。  
+![](./Security%20Diagram.png)  
   
+**何时使用哪个**  
+NACL 是 security layer 的 backup。  
+AWS Docs 原话：  
+安全组：如果你需要额外的 security layer，你可以创建一个 network ACL 并增添规则（rules）。  
+网络 ACL（NACL）：你可以设置网络 ACL，使其规则与你的安全组相似，以便为你的 VPC 添加额外安全层。  
+  
+[Ref 1](https://medium.com/awesome-cloud/aws-difference-between-security-groups-and-network-acls-adc632ea29ae)  
+[Ref 2](https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/VPC_Security.html)  
+
 ### VPC Endpoint
 应用场景：比如私有子网内的实例想往 S3 存储数据，但是又不想走互联网（NAT Instance/Gateway），则一个可行的办法即走 AWS 内网即需使用 VPC Endpoint（Gateway 或 Interface 两种类型选择，且每个 Endpoint 选择只针对某个 AWS 服务比如 S3、EC2 等等，Interface 类型即 Elastic Network Interface）。  
 添加 Endpoint 时需要设置其关联的 VPC 、该 Endpoint 将服务的子网对应的路由表（该路由表会为它自动添加一个新 Route）以及该 Endpoint 的 Policy。  
