@@ -26,6 +26,16 @@ VPC 定义：AWS Virtual Private Cloud 让你开通一个 AWS 云的逻辑上独
 默认情况下，Amazon EC2 和 Amazon VPC 使用 IPv4 寻址协议。创建 VPC 时，必须为其分配 IPv4 CIDR 块 (一系列私有 IPv4 地址)。私有 IPv4 地址无法通过 Internet 访问。要通过 Internet 连接你的实例或实现实例与其他具有公共终端节点的 AWS 服务之间的通信，你可以向实例分配全球唯一的公有 IPv4 地址。  
 你可以选择向 VPC 和子网关联 IPv6 CIDR 块，然后将此块中的 IPv6 地址分配给 VPC 中的资源。IPv6 地址是公有的，可通过 Internet 访问。  
   
+**私有 IPv4 地址**  
+私有 IPv4 地址 (也称作私有 IP 地址) 无法通过 Internet 访问，但可用于 VPC 中实例之间的通信。当在 VPC 中启动实例时，系统会将子网地址范围中的一个主要私有 IPv4 地址分配给该实例的默认网络接口 (eth0)。另外，还为每个实例指定一个可解析为实例私有 IP 地址的私有 (内部) DNS 主机名。如果未指定主要私有 IP 地址，会在子网范围内为你选择可用的 IP 地址。  
+  
+**公有 IPv4 地址**  
+所有子网都有一个用于确定在子网中创建的网络接口是否自动接收公有 IPv4 地址 (在本主题中也称作公有 IP 地址) 的属性。因此，当在启用了此属性的子网中启动实例时，系统会向为此实例创建的主网络接口 (eth0) 分配一个公有 IP 地址。公有 IP 地址通过网络地址转换 (NAT) 映射到主要私有 IP 地址。  
+如果需要向账户分配一个永久公有 IP 地址，需要改为使用弹性 IP 地址。  
+  
+**IPv6 地址**  
+IPv6 地址具有全局唯一性，因此可通过 Internet 访问。  
+  
 ### 你可以用 VPC 做什么
 VPC 基本上可以说是你的云上的一个虚拟数据中心，你可以通过 VPC 创建子网，每个子网被放进、连入不同的 AZ，子网可以有不同网络地址（比如 10.0.1.0）。  
 另外还可以：  
@@ -75,7 +85,14 @@ NAT Instance 准备被 NAT Gateway 替代（https://docs.aws.amazon.com/zh_cn/vp
 可通过社区 AMI 启动、开通一个 NAT 实例，记得启动时为其配置一个公开的子网，及支持 HTTP/HTTPS 的安全组，然后为其 disable source/destination check（因为 NAT 只是代理），然后私有子网的路由表 outbound 添加该 NAT 实例为目标且 IP 范围为互联网 IP（CIDR 表示即可）。  
 NAT Gateway 相比 NAT 实例更好处理单点故障问题更高可用等等。  
   
-### Network ACL
+### Security Group 安全组
+安全组充当虚拟防火墙，为其关联的实例控制数据流。要使用安全组，你可以添加入站规则以控制进入实例的传入流量，添加出站规则以控制来自你的实例的传出流量。要将安全组与实例关联，你可以在启动实例时指定安全组。无论你是添加还是删除安全组规则，我们都会将这些变化自动应用到与安全组相关的实例中。  
+  
+**安全组规则**  
+下表介绍了安全组的入站和出站规则。你将自行添加入站规则。出站规则是默认规则，它允许发送到任何地址的出站通信 — 你无需自行添加此规则。  
+![](./Security%20Group%20Rules.png)  
+
+### Network ACL (NACL)
 一个网络 ACL 只能属于一个 VPC，不能跨 VPC。  
 VPC 的主默认网络 ACL 默认允许所有的 inbound 和 outbound 流量，自定义创建的网络 ACL，默认是阻止所有的 inbound 和 outbound 流量直到你添加自定义 Rules。  
 VPC 的每个子网都必须关联一个网络 ACL，如果你不显式地关联子网到某个网络 ACL，则该子网会自动关联到默认的网络 ACL。  
@@ -89,6 +106,25 @@ Rule 数字：AWS 建议数字从 100 开始，且 100 是给 IPv4 而 101 是�
 安全组无法屏蔽某个 IP 地址，但你可以通过网络 ACL 做到这点、甚至屏蔽一段 IP 范围。  
 在架构上，网络 ACL 处在安全组之前面对流量，所以网络 ACL 如果进行屏蔽等操作则安全组即使允许了该类型、协议、来源的流量也无法接收到，因为流量先被网络 ACL 拦截了。  
 PS：https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/vpc-network-acls.html#nacl-ephemeral-ports  
+  
+网络访问控制列表 (ACL) 是 VPC 的一个可选安全层，可用作防火墙来控制进出一个或多个子网的流量。可以设置网络 ACL，使其规则与你的安全组相似，以便为 VPC 添加额外安全层。  
+  
+### 安全组与网络 ACL 的区别
+安全组：  
+* 是 EC2 的防火墙
+* Stateful（任意 incoming 规则都会自动应用到 outgoing 规则，比如允许 80 端口接收则也会允许 80 端口输出）
+* 支持 allow 规则，不支持 deny 规则（因为默认规则为全部 deny）
+* 较 NACL 晚执行（安全组属于实例层，较内部层），因此也级别优先度更高（比如某规则 NACL 允许了但是安全组不允许则该实例仍是不允许规则）
+* 一个实例可以有多个安全组
+
+NACL：  
+* 是子网的防火墙
+* Stateless（incoming 规则与 outgoing 规则没有 Stateful 的关联关系）
+* 支持 allow 和 deny 规则
+* 较安全组先执行（NACL 属于子网层，较外围），因此也级别优先度更低
+* 一个子网只能有一个 NACL
+  
+[Ref](https://medium.com/awesome-cloud/aws-difference-between-security-groups-and-network-acls-adc632ea29ae)  
   
 ### VPC Endpoint
 应用场景：比如私有子网内的实例想往 S3 存储数据，但是又不想走互联网（NAT Instance/Gateway），则一个可行的办法即走 AWS 内网即需使用 VPC Endpoint（Gateway 或 Interface 两种类型选择，且每个 Endpoint 选择只针对某个 AWS 服务比如 S3、EC2 等等，Interface 类型即 Elastic Network Interface）。  
@@ -118,7 +154,7 @@ Elastic Network Interface（ENI）：https://docs.aws.amazon.com/zh_cn/AWSEC2/la
 VPC 的子网的最大 size 是 /16，最小 size 是 /28。  
 AWS 默认每个子网占用 5 个 IP 地址，所以比如题目考核某个子网需要 X 个 IP 可用，请问最小 CIDR 为多少时要记得把此情况考虑进去。  
 [CIDR 详解](https://github.com/yihaoye/stem-notes/blob/master/e-computer-network/computer_networks_101.md#cidr)  
-
+  
 ### Direct Connect Gateway
 之前知道，自定义网络（如 on-primise）要快速、低延迟、独占地连接 AWS 时需要 Direct Connect Connection（物理），如果该自定义网络想相同地连接 AWS 其他几个 region 的网络时则无需再一一建立 Direct Connect Connection，只需 AWS 云平台上不同 region 上的 VPC 间使用 Direct Connect Gateway 即可，自定义网络可以通过 Direct Connect Connection 连接的 region 间接地连接到其他 region（通过它们之间的 Direct Connect Gateway）。  
   
@@ -186,3 +222,4 @@ Private Subnet B  | 10.0.2.128/25
   
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
+[AWS 使用教程 Amazon VPC](https://blog.csdn.net/zhuyunier/article/details/86593197)  
