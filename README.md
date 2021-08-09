@@ -14,7 +14,7 @@ AWS Certified Developer Associate 已完成（`Beginners Guide to EC2` `Updates 
 AWS Certified SysOps Administrator Associate 已完成  
 AWS Certified DevOps Engineer Professional 已完成  
 AWS Certified Big Data Specialty 至 `Domain 1 - Collection / Kinesis Streams Core Concepts`  
-AWS Certified Advanced Networking Specialty 至 `Design and Implement AWS Networks / VPC Basic Networking Design`  
+AWS Certified Advanced Networking Specialty 至 `Design and Implement AWS Networks / Subnets, VPC Routers, and Route Tables Part 1`  
 注：笔记在学习 Developer、SysAdmin 和 DevOps 时做，Big Data Specialty 暂不做笔记或简要地做（先考试以后有空再补笔记）  
   
 ## Linux Academy
