@@ -16,3 +16,8 @@ AWS Organizations：
   
 Organizations 会覆盖账号内的 IAM 设置（比如 IAM 设置有 EC2 权限，Organizations 可以覆盖掉、取消 EC2 权限）  
 为了设置 Organizations，会有一个账号被定义为主账号即拥有 Organizations 的权限，然后可以创建、增添从账号（对于已有账号可以通过邀请实现，该已有账号只需去往 AWS Organizations 的控制台可以看到该邀请，点击接受即可完成，在之后从账号仍然随时可以在 Organizations 控制台选择退出主账号的）。  
+  
+#### 示例服务控制策略（SCP）
+* [Prevent users from deleting Amazon VPC flow logs](./prevent_deleting_vpc_flow_logs.json)  
+* [Prevent any VPC that doesn't already have internet access from getting it](./prevent_private_vpc_accessing_internet.json)  
+
