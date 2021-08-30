@@ -71,3 +71,19 @@ VPC IPv6 数量还是受该 VPC IPv4 的数量限制的，因为后者是必选�
 所有 default VPC 的 CIDR 块都是一样的，均为 172.31.0.0/16。  
 一个安全组 associate 一个 VPC，但是可以 attach 到多个 EC2 实例。  
 在 VPC 中启动实例时，可以为该实例最多分配 5 个安全组。系统对为每个 VPC 创建的安全组数、向每个安全组添加的规则数以及与网络接口关联的安全组数设有配额。  
+
+## Subnets, VPC Routers and Route Tables
+子网是为了在 VPC 内创建隔离间，它是 VPC 的一个限制在单个 AZ 的 segment。  
+当确定 VPC 的 CIDR 块区域时，需要考虑以下几点：  
+1. 需要和其他 VPC 集成吗？（不能有 IP 地址重叠冲突）
+2. 需要和 on-premise 网络集成吗？（不能有内网 IP 地址重叠冲突）
+3. Plans for subnetting（VPC CIDR 块需根据你将对子网的分配来确定）
+   1. 该 Region 有多少个 AZ？比如 3 个 AZ 就把 /16 的 VPC 分成 4 个 /18 的子网（留一个空闲子网因为该 Region 可能以后还会增加 AZ）
+   2. 如果预估到你的应用在未来会增长到更多的 AZ，因此就可以分割成 8 个 /19 的子网
+   3. 你的 VPC 以及每个 AZ 需要多少 Tiers？比如说有 3 个 Tiers：数据库 Tier（多个 RDS 实例）、Web Server Tier（一些 EC2 实例）和 Management Tier（一些 EC2 实例 的 subset）。如此可以分割成每个 AZ 6 个 /21 的子网。Tier 对 Network ACL 的使用（子网层面启用 allow/deny rule）也很重要。为了更好地实现颗粒度的 incoming/outgoing 控制，需要把小的子网们与 NACL 集成使用。
+
+![](./Subnet%20Addressing%200.png)  
+![](./Subnet%20Addressing%201.png)    
+
+如果你的 VPC 需要和其他 VPC 通信，请不要使用 default VPC，因为 CIDR 块都是一样的。  
+/ 16 通常是为大型规模的网络服务。  
