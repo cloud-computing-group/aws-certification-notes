@@ -73,6 +73,7 @@ VPC IPv6 数量还是受该 VPC IPv4 的数量限制的，因为后者是必选�
 在 VPC 中启动实例时，可以为该实例最多分配 5 个安全组。系统对为每个 VPC 创建的安全组数、向每个安全组添加的规则数以及与网络接口关联的安全组数设有配额。  
 
 ## Subnets, VPC Routers and Route Tables
+### Subnet
 子网是为了在 VPC 内创建隔离间，它是 VPC 的一个限制在单个 AZ 的 segment。  
 当确定 VPC 的 CIDR 块区域时，需要考虑以下几点：  
 1. 需要和其他 VPC 集成吗？（不能有 IP 地址重叠冲突）
@@ -87,3 +88,20 @@ VPC IPv6 数量还是受该 VPC IPv4 的数量限制的，因为后者是必选�
 
 如果你的 VPC 需要和其他 VPC 通信，请不要使用 default VPC，因为 CIDR 块都是一样的。  
 / 16 通常是为大型规模的网络服务。  
+
+### VPC Router
+AKA implicit router  
+是数据包离开 VPC 子网前首先到达的地方。由 AWS 托管，所以会高稳定可用。  
+假设以下一个 VPC，两个 AZ 各 3 个子网（数据库、后台管理、应用服务器），
+![](./VPC%20Router.png)  
+
+每个子网都有一个 VPC Router（也因此在 CIDR 为其预留了第 2 个 IP 地址 - 比如 10.0.64.1）  
+这里需要注意的是 AWS 不支持在 VPC 内广播（所以为其预留了 CIDR 块的最后一个 IP 地址）  
+  
+VPC Router 同时作为一个让子网与其他 VPC 组件（IGW、VGW、NATGW 等等）通信的中介。  
+DHCP option sets 是 VPC 创建时默认创建的，默认的，DHCP 服务会自动为子网内每个服务、实例、组件分配合适的地址，并同时提供给这些实例予相关的 DNS 和默认网关（VPC Router）的地址。开发者可以自定义 DHCP 服务，以满足一些更复杂的 hybrid 网络场景。  
+
+Route Table（Main Route Table）在 VPC 创建时会被默认创建。  
+Route Table 里的 destination，可以是 CIDR 块或 prefix list（VPC Gateway Endpoints）。  
+Target 值可以是 VPC 组件如 IGW、NATGW、VGW、virtual gateway endpoints、VPC peers、elastic network interface 等等。值为 local 时是默认的静态值，不可删除。  
+如果子网没有自定义 Route Table，会默认使用 VPC 的 Main Route Table。最佳实践是子网有自己的自定义 Route Table。  
