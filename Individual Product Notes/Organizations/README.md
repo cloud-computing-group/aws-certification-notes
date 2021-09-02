@@ -21,3 +21,6 @@ Organizations 会覆盖账号内的 IAM 设置（比如 IAM 设置有 EC2 权限
 * [Prevent users from deleting Amazon VPC flow logs](./prevent_deleting_vpc_flow_logs.json)  
 * [Prevent any VPC that doesn't already have internet access from getting it](./prevent_private_vpc_accessing_internet.json)  
 
+## Organization & OU & Account & SCP
+![](./master_payer_architecture.png)  
+Resource Access Manager could share resource cross OU (e.g. Transit Gateway).  
