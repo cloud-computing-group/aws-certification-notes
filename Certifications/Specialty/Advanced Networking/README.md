@@ -92,7 +92,7 @@ VPC IPv6 数量还是受该 VPC IPv4 的数量限制的，因为后者是必选�
 ### VPC Router
 AKA implicit router  
 是数据包离开 VPC 子网前首先到达的地方。由 AWS 托管，所以会高稳定可用。  
-假设以下一个 VPC，两个 AZ 各 3 个子网（数据库、后台管理、应用服务器），图例的 AZ 的 CIDR 块只是展示该 AZ 里将创建的示例子网们的范围的概念而不是真的可以设置 AZ 的 CIDR（这里假设概念上我们希望 AZ 的 CIDR 掩码在 /18 的话，且子网若为 /21 且主机地址在 AZ 假设的主机地址范围内则可以有 8 个这样的子网）。  
+假设以下一个 VPC，两个 AZ 各 3 个子网（数据库、后台管理、应用服务器），图例的 AZ 的 CIDR 块只是展示该 AZ 里将创建的示例子网们的范围的概念而不是真的可以设置 AZ 的 CIDR（这里假设概念上我们希望 AZ 的 CIDR 掩码在 /18 的话，且子网若为 /21 且主机地址在 AZ 假设的主机地址范围内则可以有 8 个这样的子网）（另外要注意图里 AZ 们的 CIDR 比如 10.0.0.0/18 和 10.0.64.0/18 或同一个 AZ 内的子网们的 CIDR 比如 10.0.0.0/21 和 10.0.8.0/21 都是相邻的，即使直观上不像；工作时建议使用 https://cidr.xyz/ 计算相邻 CIDR 块以保证准确不受直觉思维误导）。  
 ![](./VPC%20Router.png)  
 
 每个子网都有一个 VPC Router（也因此在 CIDR 为其预留了第 2 个 IP 地址 - 比如 10.0.64.1）  
@@ -108,8 +108,15 @@ VPC Router 同时作为一个让子网与其他 VPC 组件（IGW、VGW、NATGW �
 DHCP option sets 是 VPC 创建时默认创建的，默认的，DHCP 服务会自动为子网内每个服务、实例、组件分配合适的地址，并同时提供给这些实例予相关的 DNS 和默认网关（VPC Router）的地址。开发者可以自定义 DHCP 服务，以满足一些更复杂的 hybrid 网络场景。  
 
 Route Table（Main Route Table）在 VPC 创建时会被默认创建。  
-Route Table 里的 Destination，可以是 CIDR 块或 prefix list（VPC Gateway Endpoints）。  
-Target 值可以是 VPC 组件如 IGW、NATGW、VGW、virtual gateway endpoints、VPC peers、elastic network interface 等等。第 1 个默认值 local 是默认的静态值，不可删除。  
+路由表字段/列名：  
+* Destination，可以是 CIDR 块或 prefix list（VPC Gateway Endpoints）。
+* Target 值可以是 VPC 组件如 IGW、NATGW、VGW、virtual gateway endpoints、VPC peers、elastic network interface 等等。
+* Status
+* Propagated
+
+![](./VPC%20Route%20Table.png)  
+
+路由表（无论是否自定义）都有一个 default route（也称 default entry），其默认值 local 是默认的静态值，其对应的 Destination 值是该 VPC 的 CIDR 块，default route 用于该 VPC 内通信以及定位 VPC 主路由器，不可删除。  
 Destination 和 Target 是一对键值对，意味着当 VPC 内的流量的目标 IP 地址为 Destination 的范围里时，将其传递到 Target 所指向的组件，等待组件去进一步处理。  
 如果子网没有自定义 Route Table，会默认使用 VPC 的 Main Route Table。最佳实践是子网有自己的自定义 Route Table。  
 
@@ -118,3 +125,5 @@ Destination 和 Target 是一对键值对，意味着当 VPC 内的流量的目�
 
 可以将子网与特定路由表显式关联。否则，子网将与主路由表隐式关联。  
 一个子网一次只能与一个路由表关联，但可以将多个子网与同一子网路由表关联。  
+创建并 associate 自定义路由表到子网后其将取代默认主路由表。  
+路由表里每一行都是一个 route。  
