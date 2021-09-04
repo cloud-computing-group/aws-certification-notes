@@ -118,7 +118,7 @@ Route Table（Main Route Table）在 VPC 创建时会被默认创建。
 
 路由表（无论是否自定义）都有一个 default route（也称 default entry），其默认值 local 是默认的静态值，其对应的 Destination 值是该 VPC 的 CIDR 块，default route 用于该 VPC 内通信以及定位 VPC 主路由器，不可删除。  
 Destination 和 Target 是一对键值对，意味着当 VPC 内的流量的目标 IP 地址为 Destination 的范围里时，将其传递到 Target 所指向的组件，等待组件去进一步处理。  
-如果子网没有自定义 Route Table，会默认使用 VPC 的 Main Route Table。最佳实践是子网有自己的自定义 Route Table。  
+如果子网没有自定义 Route Table，会默认使用 VPC 的 Main Route Table。**最佳实践是子网有自己的自定义 Route Table（比如需要区分私有子网与公共子网时，其路由表对互联网网关的 route 将不同）。**  
 
 ![](./VPC%20Route%20and%20GWs.png)  
 ![](./VPC%20Route%20Conclude.png)  
@@ -147,6 +147,7 @@ Destination 和 Target 是一对键值对，意味着当 VPC 内的流量的目�
 * 每个 EC2 实例创建时有个 default ENI，除此之外后续给其添加的 ENI 可以解绑并添加给同一 AZ 里的其他实例（ENI 的属性如 Mac 地址、安全组等等均不变并赋予新的实例）。
 
 不支持网卡聚合（NIC Teaming）：即不可以通过给 EC2 实例增添 ENI 来提高实例的带宽。  
+ENI 的 console 显示值/名字经常看似 eth0、eth1、etc。  
 
 ![](./ENI%20Console.png)  
 
@@ -166,9 +167,10 @@ Internet 网关有两个用途，一个是在 VPC 路由表中为 Internet 可�
 > The same path and translation happens in reverse whenever the response data is sent back to the instance, and it does this by sending the response it's data to elastic IP address of 59.54.53.9, which is the IP at saw as the source address from the previous packet and the packet traverses the internet and arrives at internet gateway and the internet gateway reviews the mapping knows the address should not be the elastic IP, but rather the private IP address of 10.0.1.6. So the internet gateway takes the packet, adjust the address and forwards it along to the VPC router, which forwards it onto instance and is then processed by whatever application is running on the instance. And that's pretty much the only job of internet gateway. It provides translation for ingress and egress traffic from public areas like the internet to any private areas space in VPCs.
 
 ### EIP (Elastic IP)
-EIP（弹性地址）是 Region 的，其地址值是来源于该 Region 的 IPv4 地址池（该地址池由 AWS 托管），默认可以有最多 5 个 弹性 IP 地址，可以通过向 AWS 客服申请增加。它是静态的。  
+EIP（弹性地址）是 Region 的，其地址值可以是来源于该 AWS Region 的 IPv4 地址池（该地址池由 AWS 托管）或你自己在 AWS 之外拥有的 IP 地址，默认可以有最多 5 个 弹性 IP 地址，可以通过向 AWS 客服申请增加。它是静态的。  
 当不再需要时，可以释放 EIP 将其还给 AWS（返回 AWS 地址池）。  
 前面所描述的 VPC 服务、资源使用互联网网关访问互联网时所需的 public IP 地址就是通过 EIP 实现的。  
+当将 EIP 附着给一个 EC2 实例时，它其实是附着在该实例的 ENI 上（可以是默认主 ENI 或自定义添加的 ENI），附着时先确保实例的子网已经附着了 IGW，否则会有报错。  
 AWS 除了提供 EIP，还提供 Not Elastic IPs、Dynamic IPs 和 Auto Assigned IPs，皆是 public IP 地址，但不同的是它们会在实例生命周期停止时就被释放回 AWS。  
 ![](./Elastic%20IP%20and%20Dynamic%20external%20IP.png)  
 
@@ -178,4 +180,7 @@ Dual-Homed Instance 示例：
 ![](./Dual-Homed%20Instance.png)  
 
 上面的 flexible software licensing，比如基于 Mac 地址或内部私有 IP 地址等等。同时因为 licensing 只与 ENI 关联，所以可以灵活地迁移 ENI 与相关软件 licensing 到不同的实例，不受实例生命周期影响。  
+
+![](./Demo%20of%20ENI%20+%20EIP%20+%20IGW.png)  
+
 
