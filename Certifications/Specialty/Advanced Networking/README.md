@@ -127,3 +127,9 @@ Destination 和 Target 是一对键值对，意味着当 VPC 内的流量的目�
 一个子网一次只能与一个路由表关联，但可以将多个子网与同一子网路由表关联。  
 创建并 associate 自定义路由表到子网后其将取代默认主路由表。  
 路由表里每一行都是一个 route。  
+
+## Elastic Network Interface, Elastic IP, and Internet Gateway
+### ENI (Elastic Network Interface)
+与物理网卡类似，ENI（Elastic Network Interface）是虚拟网络接口，可以连接 AWS 资源、服务（e.g. EC2）到网络中，在这里，该网络指的是 VPC。ENI 的 icon 设计的也是一个物理网卡。所以当一个 AWS 资源、服务被创建且被 associated 或其本身创建一个 ENI 时，它们总是处于一个 VPC 中并被分配到指定的子网中。  
+  
+

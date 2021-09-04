@@ -68,6 +68,10 @@ AWS Certified DevOps Engineer – Professional Level 至 `DynamoDB Concepts / Dy
     * https://aws.amazon.com/sqs/faqs/
     * https://aws.amazon.com/kinesis/faqs/
   
+### AWS Icons
+![](./AWS%20Services%20Icons%200.jpeg)  
+![](./AWS%20Services%20Icons%201.png)  
+  
 ### Useful Resources
 http://mistwire.com/2016/05/aws-certified-solutions-architect-associate-study-notes/ 已完成  
 https://www.whizlabs.com/  
