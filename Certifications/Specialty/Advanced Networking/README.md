@@ -130,6 +130,20 @@ Destination 和 Target 是一对键值对，意味着当 VPC 内的流量的目�
 
 ## Elastic Network Interface, Elastic IP, and Internet Gateway
 ### ENI (Elastic Network Interface)
-与物理网卡类似，ENI（Elastic Network Interface）是虚拟网络接口，可以连接 AWS 资源、服务（e.g. EC2）到网络中，在这里，该网络指的是 VPC。ENI 的 icon 设计的也是一个物理网卡。所以当一个 AWS 资源、服务被创建且被 associated 或其本身创建一个 ENI 时，它们总是处于一个 VPC 中并被分配到指定的子网中。  
-  
+在 Associate 不要求掌握，但在网络 Specialty，必须了解 ENI。  
+与物理网卡类似，ENI（Elastic Network Interface）是虚拟网络接口，可以连接 AWS 资源、服务（e.g. EC2）到网络中，在这里，该网络指的是 VPC。ENI 的 icon 设计的也是一个物理网卡。所以当一个 AWS 资源、服务被创建且被 associated 或其本身创建一个 ENI 时，它们总是处于一个 VPC 中并被分配到指定的子网中（ENIs are inside VPC and are associated with subnet）。  
+* Primary IPv4 address
+* Mac address
+* 至少一个 security group
+
+![](./Simple%20Elastic%20Network%20Interface%20Architecture.png)  
+* 当一个 EC2 实例从 DHCP 那里获得其在 VPC 私有 IP 地址时，其实是通过 DHCP 分配给其的默认 ENI 的 internal IP address 实现的。
+* internal IP address 可以有 primary 和 secondary（均在 VPC CIDR 范围内，可以更多，其数量根据实例类型决定）。
+* ENI 会跟随 EC2 实例的生命周期被创建或删除。一个 EC2 实例可以有多个 ENI。
+* VPC 上的弹性 IP 地址可以 associate 到 ENI 的其中一个私有 IP 地址上。
+* 源/目标检查 - 可以启用或禁用源/目标检查，以确保实例是其接收的任何流量的源或目标（启用可以丢弃掉数据包）。默认情况下会启用源/目标检查。如果实例运行网络地址转换、路由或防火墙等服务，必须禁用源/目标检查（比如 NAT）。
+* 安全组 - 当为 EC2 实例添加安全组时，其实是通过给其 primary ENI 添加安全组实现。默认一个 ENI 最多 5 个安全组，但是可以申请增加。
+* ENI 是局限于一个 AZ，不是跨 AZ 的，不能迁移到其他 AZ。
+* 每个 EC2 实例创建时有个 default ENI，除此之外后续给其添加的 ENI 可以解绑并添加给同一 AZ 里的其他实例。
+
 
