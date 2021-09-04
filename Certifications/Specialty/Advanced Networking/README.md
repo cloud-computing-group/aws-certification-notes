@@ -152,3 +152,30 @@ Destination 和 Target 是一对键值对，意味着当 VPC 内的流量的目�
 
 ### IGW (Internet Gateway)
 Internet 网关有两个用途，一个是在 VPC 路由表中为 Internet 可路由流量提供目标，另一个是为已经分配了公有 IPv4 地址的实例执行网络地址转换 (NAT) 即 translate 某个服务、资源的私有 IP 地址到其 associated 的公有 IP 地址或是从公有 IP 地址 translate 到私有 IP 地址。  
+
+一个互联网网关不能附着多个 VPC，只能最多一个。而一个 VPC 也最多只能附着一个互联网网关。  
+互联网网关是 AWS 托管的高稳定、可用服务。  
+使用互联网网关通常是为了让 VPC 内的服务、资源可以访问 public 服务，比如 AWS end points 或公共互联网 end points（因此该内部服务、资源必须有公共 IP 地址才能使用 IGW，否则另一个办法是通过 NAT 来绕过）。VPC 服务与 IGW 之间的流量通过 VPC 路由器及路由表实现（因此该内部服务、资源所在的子网的相关路由表必须添加了正确的 IGW 相关的 route/entry）。  
+
+![](./Internet%20Gateway%200.png)  
+图例中，弹性 IP 地址为 59.54.53.9。  
+图例的路由表中的 2 个 route 意思是：Any traffic that EC2 instances have that is not local traffic will fall back to this default destination in route table and forward the traffic onto the public internet.  
+  
+**互联网网关 translate 私有公有 IP 过程：**  
+> An EC2 instance creates some data/packet now, and it has a source IP address of 10.0.1.6 and it moves from the instance to the VPC router and proceeds onto the internet gateway directed by the route table. Now, at this point, internet gateway looks at the packet and looks for any mappings between the instances private IP address and any public IP addresses. So in this case, the internet gateway does find a mapping and maps, 10.0.1.6 to 59.54.53.9, which is elastic IP address. Now the internet gateway at this point, performs source address translation. And that is it modifies the packet to it appear to be from elastic IP address and not internal private IP address. And by doing so allows the packet to be sent over a public routable network. And in this case, the public internet and the packet is sent on to its final destination where it can be any internet facing end point.  
+> The same path and translation happens in reverse whenever the response data is sent back to the instance, and it does this by sending the response it's data to elastic IP address of 59.54.53.9, which is the IP at saw as the source address from the previous packet and the packet traverses the internet and arrives at internet gateway and the internet gateway reviews the mapping knows the address should not be the elastic IP, but rather the private IP address of 10.0.1.6. So the internet gateway takes the packet, adjust the address and forwards it along to the VPC router, which forwards it onto instance and is then processed by whatever application is running on the instance. And that's pretty much the only job of internet gateway. It provides translation for ingress and egress traffic from public areas like the internet to any private areas space in VPCs.
+
+### EIP (Elastic IP)
+EIP（弹性地址）是 Region 的，其地址值是来源于该 Region 的 IPv4 地址池（该地址池由 AWS 托管），默认可以有最多 5 个 弹性 IP 地址，可以通过向 AWS 客服申请增加。它是静态的。  
+当不再需要时，可以释放 EIP 将其还给 AWS（返回 AWS 地址池）。  
+前面所描述的 VPC 服务、资源使用互联网网关访问互联网时所需的 public IP 地址就是通过 EIP 实现的。  
+AWS 除了提供 EIP，还提供 Not Elastic IPs、Dynamic IPs 和 Auto Assigned IPs，皆是 public IP 地址，但不同的是它们会在实例生命周期停止时就被释放回 AWS。  
+![](./Elastic%20IP%20and%20Dynamic%20external%20IP.png)  
+
+### 综合使用 ENI、IGW、EIP
+Dual-Homed Instance 示例：  
+实现 1 个实例跨 2 个同 AZ 的子网。其好处在于更灵活的安全组、不同的用户访问不同的 ENI（比如客户和内部管理员访问路径与路径的安全组不同）；另外使用 ENI 也可以实现更新实例时启用备份实例 -> 将 ENI 转附着备份实例 -> 更新后将 ENI 转附着回来，从而客户端没有 downtime。  
+![](./Dual-Homed%20Instance.png)  
+
+上面的 flexible software licensing，比如基于 Mac 地址或内部私有 IP 地址等等。同时因为 licensing 只与 ENI 关联，所以可以灵活地迁移 ENI 与相关软件 licensing 到不同的实例，不受实例生命周期影响。  
+
