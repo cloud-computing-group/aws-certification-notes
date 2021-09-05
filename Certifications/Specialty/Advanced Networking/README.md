@@ -183,4 +183,24 @@ Dual-Homed Instance 示例：
 
 ![](./Demo%20of%20ENI%20+%20EIP%20+%20IGW.png)  
 
+## Traffic Control
+* [Network Access Control Lists](../../../Individual%20Product%20Notes/VPC/README.md#network-acl-nacl)
+* [Security Groups](../../../Individual%20Product%20Notes/VPC/README.md#security-group-安全组)
+  
+### Security Group
+安全组除了可以添加给 EC2 实例之外，也可以添加给 RDS 实例或 ELB。  
+安全组与 EC2 实例里的应用程序无关。  
+安全组不能跨 VPC（VPC Peering 则比较特别），某个安全组能使用在同一个 VPC 中的服务、资源。  
+一个子网最多一个 NACLs，但是同一个 NACLs 可以添加给多个子网。  
+![](./NACLs%20and%20SGs.png)  
+![](./NACLs%20and%20SGs%20in%20Use.png)  
+  
+[NACL 与 SG 的区别](../../../Individual%20Product%20Notes/VPC/README.md#安全组与网络-acl-的区别)  
 
+Ingress traffic = inbound traffic  
+Egress traffic = outbound traffic  
+
+![](./SGs%20Self%20Referencing.png)  
+Self Referencing 可用于一个 SG 内的服务、资源给予另一个 SG 内所有实例、资源同样的访问权，因为如果实例数量很多或 IP 变动的话，这是最方便的群组管理方式，另外默认 SG 有自我 reference 即意味着同一 SG 内的实例可以互相访问对方。  
+  
+NACLs 简单理解上类似防火墙。  
