@@ -220,3 +220,20 @@ Explicit deny = specific deny rule
 * Only allow access where access need to be granted
 * Be able to diagnose network issues that could be caused by SGs and NACLs
 
+## NAT
+> 网络地址转换（Network Address Translation，缩写：NAT；又称网络掩蔽、IP掩蔽）在计算机网络中是一种在IP数据包通过路由器或防火墙时重写来源IP地址或目的IP地址的技术。这种技术被普遍使用在有多台主机但只通过一个公有IP地址访问互联网的私有网络中。它是一个方便且得到了广泛应用的技术。当然，NAT也让主机之间的通信变得复杂，导致了通信效率的降低。  
+
+过去的 NAT 实例架构：设置私有子网的路由表，将 destination 为 0.0.0.0/0（互联网）的流量 target 到公共子网的 NAT 实例（nat-xxxxx）。同时还需要禁用 源/目标检查（因为此检查下，数据包的源或目标如果不是网关则数据包将会被丢弃，在这里源是私有 IP 地址目标是 public routable endpoint）。  
+![](./NAT%20Instance%20Architecture.png)  
+
+为了更高稳定可用（比如其中一个 AZ 宕机、fails），应该也在另一个公共子网中启用一个 NAT 实例（更理想的是使用 AWS 托管的 NAT Gateway + EIP，因为使用 NAT 实例时若发生 failover 还需要心跳检查和脚本动态更新路由表指向可用 NAT 实例，另外当带宽增大时先前开通的 NAT 实例 type 可能超负荷，而且实例本身也可能各种原因 fail 而 AWS 托管的网关不会）以作后备。  
+![](./NAT%20Gateway%20Architecture.png)  
+
+NAT Gateway 可以 handle 45GB/s 或更多（需申请）。  
+注意：NAT Gateway 不能添加安全组（可以添加 NACL 到其所在子网），但是可以为 NAT Gateway 服务的资源添加安全组。  
+
+Demo NAT Gateway:  
+![](./Demo%20NAT%20Gateway%20Architecture.png)  
+  
+## VPC Endpoints
+> 通过 VPC 终端节点，你可以在你的 VPC 与受支持的 AWS 服务和由 AWS PrivateLink 支持的 VPC 终端节点服务之间建立私有连接。AWS PrivateLink 是一种技术，支持你使用私有 IP 地址私密访问服务。VPC 和其他服务之间的通信不会离开 Amazon 网络。VPC 终端节点不需要互联网网关、虚拟私有网关、NAT 设备、VPN 连接或 AWS Direct Connect 连接。VPC 中的实例无需公有 IP 地址便可与服务中的资源通信。
