@@ -191,7 +191,7 @@ Dual-Homed Instance 示例：
 安全组除了可以添加给 EC2 实例之外，也可以添加给 RDS 实例或 ELB。  
 安全组与 EC2 实例里的应用程序无关。  
 安全组不能跨 VPC（VPC Peering 则比较特别），某个安全组能使用在同一个 VPC 中的服务、资源。  
-一个子网最多一个 NACLs，但是同一个 NACLs 可以添加给多个子网。  
+一个子网有且最多一个 NACLs，但是同一个 NACLs 可以添加给多个子网。  
 ![](./NACLs%20and%20SGs.png)  
 ![](./NACLs%20and%20SGs%20in%20Use.png)  
   
@@ -203,4 +203,20 @@ Egress traffic = outbound traffic
 ![](./SGs%20Self%20Referencing.png)  
 Self Referencing 可用于一个 SG 内的服务、资源给予另一个 SG 内所有实例、资源同样的访问权，因为如果实例数量很多或 IP 变动的话，这是最方便的群组管理方式，另外默认 SG 有自我 reference 即意味着同一 SG 内的实例可以互相访问对方。  
   
-NACLs 简单理解上类似防火墙。  
+### Network ACL
+NACLs 简单理解上类似防火墙。对数据包进行处理：Allow 或 Deny。  
+![](./NACLs%20and%20Rule%20Ordering.png)  
+优先级从上到下（数字较低在上），最后到 * Rule，先 match 的 Rule 就先执行。  
+
+Implicit deny = default wildcard rule  
+Explicit allow = specific allow rule  
+Explicit deny = specific deny rule  
+
+临时端口（Ephemeral port）又称短暂端口，是 TCP、UDP 或 SCTP 协议通过 TCP/IP 底层软件从预设范围内自动获取的端口，一般提供给主从式架构通讯中的客户端。这种端口是临时的，并且仅在应用程序使用协议建立通讯联系的周期中有效。  
+![](./Ephemeral%20Ports.png)  
+
+### 网络工程师设计最佳实践
+* Use a deny all approach
+* Only allow access where access need to be granted
+* Be able to diagnose network issues that could be caused by SGs and NACLs
+
