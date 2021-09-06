@@ -237,3 +237,23 @@ Demo NAT Gateway:
   
 ## VPC Endpoints
 > 通过 VPC 终端节点，你可以在你的 VPC 与受支持的 AWS 服务和由 AWS PrivateLink 支持的 VPC 终端节点服务之间建立私有连接。AWS PrivateLink 是一种技术，支持你使用私有 IP 地址私密访问服务。VPC 和其他服务之间的通信不会离开 Amazon 网络。VPC 终端节点不需要互联网网关、虚拟私有网关、NAT 设备、VPN 连接或 AWS Direct Connect 连接。VPC 中的实例无需公有 IP 地址便可与服务中的资源通信。
+
+
+
+# Hybrid Networking Basics and VPNs in AWS
+Hybrid Networking 解决方案：  
+* [Direct Connect](../../../Individual%20Product%20Notes/Direct%20Connect/README.md) - 专用网络，不经互联网，贵
+* Virtual Private Gateway - VPN
+* Transit Gateway - VPN
+
+通常 initial access 不频繁，但是可以期望的是雇员会在不同的办公室或地址进行 VPN 访问。  
+企业希望 VPN 能快速配置且费用得到控制。  
+
+另外还需满足几个基本要求：  
+* 流量加密
+* 吞吐量会增长
+* 允许多个、不同地址的访问
+* 快速并低成本地实现
+
+## Virtual Private Gateway
+Virtual Private Gateway 和 Transit Gateway 有些功能重叠，后者是 2018 年新出的服务，事实上有些旧的 Virtual Private Gateway 在往 Transit Gateway 迁移。  
