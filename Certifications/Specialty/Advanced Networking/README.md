@@ -240,6 +240,8 @@ Demo NAT Gateway:
 
 
 
+
+
 # Hybrid Networking Basics and VPNs in AWS
 Hybrid Networking 解决方案：  
 * [Direct Connect](../../../Individual%20Product%20Notes/Direct%20Connect/README.md) - 专用网络，不经互联网，贵
@@ -257,3 +259,20 @@ Hybrid Networking 解决方案：
 
 ## Virtual Private Gateway
 Virtual Private Gateway 和 Transit Gateway 有些功能重叠，后者是 2018 年新出的服务，事实上有些旧的 Virtual Private Gateway 在往 Transit Gateway 迁移。  
+
+* AWS 托管的服务
+* 如路由器般工作于所在 VPC 和非 AWS 网络（on-premise、GCP、Azure 等等）（也可以是另一个 VPC）之间
+* 可以 associated 到多个外部连接（external connection）
+* 同一时间只能 attach 到一个 VPC（可以 detach）
+
+VGW 有 2 种工作的 connection：  
+* Site-to-Site VPN
+* Direct Connect
+
+启用一个新的 VGW 时，主要需要填写 ASN（即使其他连接没有使用 BGP）和 attached VPC，并且一旦设置不能更改、只能创建新的删掉旧的。  
+ASN（Autonomous System Number）用于识别参与了[边界网关协议（BGP）](https://zh.wikipedia.org/wiki/%E8%BE%B9%E7%95%8C%E7%BD%91%E5%85%B3%E5%8D%8F%E8%AE%AE)路由基础设施的企业、组织的网络。  
+> 自治系统（Autonomous System）是指在互联网中，一个或多个实体管辖下的所有IP网络和路由器的组合，它们对互联网执行共同的路由策略。最初自治系统要求由一个单一实体管辖，通常是一个 ISP 或一个拥有到多个网络的独立连接的大型组织，其遵循一个单一且明确的路由策略。由于多个组织可使用各自的自治系统编号与将它们连接到互联网的 ISP 之间运行 BGP 协议，因此得到较多应用的是 RFC 1930 中较新的定义。尽管 ISP 支持了这多个自治系统，但对互联网来说只能看到该 ISP 的路由策略。所以 ISP 必须具有一个公开且正式登记的自治系统编号（ASN）。用于 BGP 路由中的每个自治系统都被分配一个唯一的自治系统编号（ASN）。对 BGP 来说，因为 ASN 是区别整个相互连接的网络中的各个网络的唯一标识，所以这个自治系统编号非常重要。互联网地址分派机构将 64512 到 65535 的 ASN 编号保留给（私有）专用网络使用，类似私有 IP。  
+
+BGP Peering Connections 需要 local AS 和 remote ASs 的 ASN 以配置 local 的路由器以及与 remote ASs 的路由器建立 BGP Peering Connections  
+![](./BGP%20Peering%20Connections.png)  
+![](./Autonomous%20System%20Number.png)  
