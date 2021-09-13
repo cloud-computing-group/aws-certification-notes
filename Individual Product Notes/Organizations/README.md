@@ -20,6 +20,7 @@ Organizations 会覆盖账号内的 IAM 设置（比如 IAM 设置有 EC2 权限
 #### 示例服务控制策略（SCP）
 * [Prevent users from deleting Amazon VPC flow logs](./prevent_deleting_vpc_flow_logs.json)  
 * [Prevent any VPC that doesn't already have internet access from getting it](./prevent_private_vpc_accessing_internet.json)  
+* [Whitelist IP Address Access](./whitelist_ip_address_access.json)
 
 ## Organization & OU & Account & SCP
 ![](./master_payer_architecture.png)  
