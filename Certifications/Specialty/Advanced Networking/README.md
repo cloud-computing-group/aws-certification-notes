@@ -276,3 +276,22 @@ ASN（Autonomous System Number）用于识别参与了[边界网关协议（BGP�
 BGP Peering Connections 需要 local AS 和 remote ASs 的 ASN 以配置 local 的路由器以及与 remote ASs 的路由器建立 BGP Peering Connections  
 ![](./BGP%20Peering%20Connections.png)  
 ![](./Autonomous%20System%20Number.png)  
+
+## AWS Hybrid Route Learning
+Route Table 两个作用：  
+* 知道终点目标（known destination networks）
+* 指引到达终点的最佳下一个 target（next-hop target for traffic）
+
+如果没有到达终点的 route，traffic 会被丢弃。  
+
+In AWS Hybrid environment, how do both sides know how to reach each other：  
+![](./Where%20Can%20Network%20Traffic%20Be%20Sent.png)  
+The answer is route-learning：  
+* Static route-learning
+  * 手动配置网络 prefixes
+  * 限制 route 应用偏好的方法
+  * 不适用于大型网络
+* Dynamic route-learning
+  * Peer 路由器通过路由协议共享网络 prefixes
+  * 。。。
+
