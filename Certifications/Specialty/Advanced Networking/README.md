@@ -293,5 +293,22 @@ The answer is route-learning：
   * 不适用于大型网络
 * Dynamic route-learning
   * Peer 路由器通过路由协议共享网络 prefixes
-  * 。。。
+  * Optional controls over route preferences
+  * 广泛使用在大型网络中
+  
+### 哪里使用 Route Learning
+* Site-to-Site VPN (Static route-learning or Dynamic route-learning)
+* Direct Connect (Only Dynamic route-learning)
+  
+Dynamic route-learning 总是使用 BGP 协议（Border Gateway Protocol）  
+![](./Where%20Can%20VPC%20Subnets%20Send%20Traffic.png)  
+子网路由需要 route 指向 VPC 主路由器，主路由器主路由表需要 route 指向 on-premise 网络（这些主路由表的 route 需要先指向 VGW 作为 next hop）  
 
+给 VPC 主路由表添加 route 有 2 种方法：  
+* Static - VPC 管理员手动添加
+* Dynamic - 通过 Route Propagation 自动添加
+
+**Route Propagation**  
+![](./Route%20Propagation%200.png)  
+![](./Route%20Propagation%201.png)  
+自此，VGW 从 Hybrid 网络里学到的 route 都会自动添加了。  
