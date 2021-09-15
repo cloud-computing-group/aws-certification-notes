@@ -311,4 +311,6 @@ Dynamic route-learning 总是使用 BGP 协议（Border Gateway Protocol）
 **Route Propagation**  
 ![](./Route%20Propagation%200.png)  
 ![](./Route%20Propagation%201.png)  
-自此，VGW 从 Hybrid 网络里学到的 route 都会自动添加了。  
+自此，VGW 从 Hybrid 网络里学到的 route 都会自动添加到路由器。  
+
+![](./Routing%20Conflicts.png)  
