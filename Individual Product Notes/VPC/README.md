@@ -236,6 +236,14 @@ Private Subnet B  | 10.0.2.128/25
   
 其他 VPC 策略基本一样。  
   
+## AWS Site-to-Site VPN
+有两种方法配置 Hybrid Cloud（AWS VPC 连接 on-premise 内网络）：  
+* Virtual Private Gateway
+* Transit Gateway
+
+其中 Transit Gateway 更新更先进方便，可以通过 AWS RAM 共享给其他 AWS 账号，有助于构建更精简的网络架构。  
+https://www.youtube.com/watch?v=4knN0B3_R_M  
+  
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
 [AWS 使用教程 Amazon VPC](https://blog.csdn.net/zhuyunier/article/details/86593197)  
