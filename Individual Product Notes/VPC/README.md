@@ -243,6 +243,7 @@ Private Subnet B  | 10.0.2.128/25
 
 其中 Transit Gateway 更新更先进方便，可以通过 AWS RAM 共享给其他 AWS 账号，有助于构建更精简的网络架构。  
 https://www.youtube.com/watch?v=4knN0B3_R_M  
+![](./Shared%20TGW%20VPN.pngs)  
   
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
