@@ -12,3 +12,6 @@
 其他：  
 * 高可用可靠
 * 容错 - 你无需管理任何硬件或软件，没有失效、报错的风险  
+
+
+https://docs.aws.amazon.com/zh_cn/singlesignon/latest/userguide/users-groups-provisioning.html
