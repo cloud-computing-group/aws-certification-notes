@@ -81,4 +81,8 @@ Customized Provider:
 7. CI for TF Code 
 8. Execute TF only in an automated build
    
+https://www.terraform-best-practices.com/  
 
+## Examples
+https://github.com/trussworks/terraform-layout-example  
+https://github.com/futurice/terraform-examples  

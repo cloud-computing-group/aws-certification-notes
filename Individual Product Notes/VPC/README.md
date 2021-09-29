@@ -241,6 +241,8 @@ Dev VPC Subnet CIDR
 * Virtual Private Gateway
 * Transit Gateway
 
+https://docs.aws.amazon.com/zh_cn/vpn/latest/s2svpn/SetUpVPNConnections.html  
+
 其中 Transit Gateway 更新更先进方便，可以通过 AWS RAM 共享给其他 AWS 账号，有助于构建更精简的网络架构。  
 https://www.youtube.com/watch?v=4knN0B3_R_M  
 ![](./Shared%20TGW%20VPN.png)  
