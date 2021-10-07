@@ -253,6 +253,7 @@ https://aws.amazon.com/cn/blogs/architecture/field-notes-working-with-route-tabl
 Centralized egress to internet：  
 https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/centralized-egress-to-internet.html  
 https://www.youtube.com/watch?v=eG2zrqj0cRI  
+https://docs.aviatrix.com/HowTos/tgw_egress_vpc.html  
   
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
