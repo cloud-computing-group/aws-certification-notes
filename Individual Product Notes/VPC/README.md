@@ -249,6 +249,10 @@ https://www.youtube.com/watch?v=4knN0B3_R_M
 
 https://aws.amazon.com/cn/blogs/architecture/field-notes-working-with-route-tables-in-aws-transit-gateway/  
 ![](./How-different-AWS-accounts-are-connected-via-AWS-Transit-Gateway.png)  
+
+Centralized egress to internet：  
+https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/centralized-egress-to-internet.html  
+https://www.youtube.com/watch?v=eG2zrqj0cRI  
   
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
