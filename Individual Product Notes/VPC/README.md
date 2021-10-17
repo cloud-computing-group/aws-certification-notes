@@ -255,6 +255,10 @@ https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vp
 https://www.youtube.com/watch?v=eG2zrqj0cRI  
 https://docs.aviatrix.com/HowTos/tgw_egress_vpc.html  
   
+## 本地网络集成云的 DNS 解决方案
+https://docs.aws.amazon.com/zh_cn/prescriptive-guidance/latest/patterns/set-up-integrated-dns-resolution-for-hybrid-networks-in-amazon-route-53.html  
+![](./DNS%20Resolution%20with%20Hybrid%20Networks.png)  
+  
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
 [AWS 使用教程 Amazon VPC](https://blog.csdn.net/zhuyunier/article/details/86593197)  
