@@ -258,6 +258,8 @@ https://docs.aviatrix.com/HowTos/tgw_egress_vpc.html
 ## 本地网络集成云的 DNS 解决方案
 https://docs.aws.amazon.com/zh_cn/prescriptive-guidance/latest/patterns/set-up-integrated-dns-resolution-for-hybrid-networks-in-amazon-route-53.html  
 ![](./DNS%20Resolution%20with%20Hybrid%20Networks.png)  
+![](./VPC%20with%20Resolver%20Outbound%20Endpoint%200.png)  
+![](./VPC%20with%20Resolver%20Outbound%20Endpoint%201.png)  
   
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
