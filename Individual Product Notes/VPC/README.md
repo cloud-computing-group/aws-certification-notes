@@ -258,8 +258,10 @@ https://docs.aviatrix.com/HowTos/tgw_egress_vpc.html
 ## 本地网络集成云的 DNS 解决方案
 https://docs.aws.amazon.com/zh_cn/prescriptive-guidance/latest/patterns/set-up-integrated-dns-resolution-for-hybrid-networks-in-amazon-route-53.html  
 ![](./DNS%20Resolution%20with%20Hybrid%20Networks.png)  
+https://docs.aws.amazon.com/zh_cn/Route53/latest/DeveloperGuide/resolver-forwarding-outbound-queries.html  
 ![](./VPC%20with%20Resolver%20Outbound%20Endpoint%200.png)  
 ![](./VPC%20with%20Resolver%20Outbound%20Endpoint%201.png)  
+Rule 依赖于 Outbound Endpoint，对于中心化的网络架构，比如有一个 AWS Account 托管中心 VPC 和中心 TGW，Rule 和 Outbound Endpoint 可以放在中心 VPC 里（也在这里创建），然后通过 RAM 把 Rule 共享给其他 AWS Account 以 associate 到其 VPC。  
   
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
