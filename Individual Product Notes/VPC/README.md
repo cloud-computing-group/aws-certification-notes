@@ -263,6 +263,9 @@ https://docs.aws.amazon.com/zh_cn/Route53/latest/DeveloperGuide/resolver-forward
 ![](./VPC%20with%20Resolver%20Outbound%20Endpoint%201.png)  
 Rule 依赖于 Outbound Endpoint，对于中心化的网络架构，比如有一个 AWS Account 托管中心 VPC 和中心 TGW，Rule 和 Outbound Endpoint 可以放在中心 VPC 里（也在这里创建），然后通过 RAM 把 Rule 共享给其他 AWS Account 以 associate 到其 VPC。  
   
+### 其他 DNS 相关
+https://aws.amazon.com/cn/premiumsupport/knowledge-center/ec2-static-dns-ubuntu-debian/  
+  
 ## 参考
 [AWS 子网划分策略](https://zhuanlan.zhihu.com/p/60952066)  
 [AWS 使用教程 Amazon VPC](https://blog.csdn.net/zhuyunier/article/details/86593197)  
