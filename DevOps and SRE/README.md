@@ -1,3 +1,6 @@
+# DevOps、SRE 工作知识
+[企业内网与外网](./企业内网与外网.md)  
+  
 # DevOps 与 SRE 异同
 https://dzone.com/articles/devops-or-sre-differences-similarities-and-which-r  
 https://www.kubernetes.org.cn/7508.html  
