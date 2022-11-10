@@ -71,15 +71,16 @@ Customized Provider:
 ![](./Terraform%20Customized%20Provider.png)  
 
 ### Best Practices
-[8 Terraform Best Practices that will improve TF workflow immediately](https://www.youtube.com/watch?v=gxPykhPxRW0):  
-1. Manipulate state only through TF commands
-2. Remote State
-3. State Locking
-4. Back up State File
-5. Use 1 State per Environment
-6. Host TF code in Git repository
-7. CI for TF Code 
-8. Execute TF only in an automated build
+* [4 Considerations to Structure Terraform Code](https://www.youtube.com/watch?v=Qg8VZsbaXxA)  
+* [8 Terraform Best Practices that will improve TF workflow immediately](https://www.youtube.com/watch?v=gxPykhPxRW0):  
+  1. Manipulate state only through TF commands
+  2. Remote State
+  3. State Locking
+  4. Back up State File
+  5. Use 1 State per Environment
+  6. Host TF code in Git repository
+  7. CI for TF Code 
+  8. Execute TF only in an automated build
    
 https://www.terraform-best-practices.com/  
 
