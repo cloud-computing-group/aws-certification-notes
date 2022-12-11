@@ -2,8 +2,8 @@
   
 ### 什么是 DynamoDB
 它是快速、灵活的 NoSQL 数据库，提供稳定一致的、任何规模下都能达到只有毫秒级延迟的响应性能，支持 Document 和键值数据模型。它灵活的数据模型及稳定可靠的性能使得它适用于手机、Web、游戏、广告技术、IoT 及其他应用场景。  
-它是无服务的，不能手动进行 Auto Scaling（自动的，但可以进行一些有限的策略、设置：https://docs.aws.amazon.com/zh_cn/amazondynamodb/latest/developerguide/AutoScaling.html），因为该服务完全由 AWS 管理（它根据当前 WCU/RCU 性能与表中数据数量来判断管理底层资源、服务开通），并可以与 Lambda 函数很好地结合使用，非常适用于无服务架构的应用、开发。  
-基于 region，非 global。（但是有 DynamoDB Global Table，设计为了解决 Region fail 的情况 - 自动同步备份数据并在主 region fail 时 promote 其他 region 以替代工作 cover disaster：https://docs.aws.amazon.com/zh_cn/amazondynamodb/latest/developerguide/GlobalTables.html）  
+它是无服务的，不能手动进行 Auto Scaling（自动的，但可以进行一些有限的策略、设置：https://docs.aws.amazon.com/zh_cn/amazondynamodb/latest/developerguide/AutoScaling.html ），因为该服务完全由 AWS 管理（它根据当前 WCU/RCU 性能与表中数据数量来判断管理底层资源、服务开通），并可以与 Lambda 函数很好地结合使用，非常适用于无服务架构的应用、开发。  
+基于 region，非 global。（但是有 DynamoDB Global Table，设计为了解决 Region fail 的情况 - 自动同步备份数据并在主 region fail 时 promote 其他 region 以替代工作 cover disaster：https://docs.aws.amazon.com/zh_cn/amazondynamodb/latest/developerguide/GlobalTables.html ）  
   
 ### 特点
 * 存储在 SSD 硬盘存储上
@@ -28,7 +28,7 @@
     * Set
 * 支持键值和文档数据模型、结构
 * 键 - 数据的名，值 - 数据本身
-* 文档数据，格式可以是 JSON、XML 或 HTML（https://zh.wikipedia.org/wiki/%E9%9D%A2%E5%90%91%E6%96%87%E6%AA%94%E7%9A%84%E6%95%B8%E6%93%9A%E5%BA%AB）  
+* 文档数据，格式可以是 JSON、XML 或 HTML（https://zh.wikipedia.org/wiki/%E9%9D%A2%E5%90%91%E6%96%87%E6%AA%94%E7%9A%84%E6%95%B8%E6%93%9A%E5%BA%AB ）  
   
 ### 操作
 * DynamoDB 基于主键来存储、获取数据
