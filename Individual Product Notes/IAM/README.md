@@ -20,7 +20,7 @@ AWS 根用户可以配置以强制要求 IAM 用户使用其 MFA（多重要素�
 ## A Cloud Guru - Developer Associate
 IAM 可以让用户通过AWS console配置 IAM 的 Resources: Users Account、User Groups、Roles、Identity Provider、Customer Managed Policies 以及一些更进一步的安全设置如 Multi-Factor Authentication（MFA） etc。  
 IAM 是全球的，所有配置不分 Region，每个 Region 都一样。但是有一些 Region 的 AWS 服务不一样（比如美国可能上了新的服务但其他地方没有），这样 IAM 配置时也可能根据 Region 有不同的配置、限制，但是与 IAM 本身无关。  
-进入 IAM 的Dashboard后，可以看到属于用户个人的 sign-in link（https://{your_customer_account_number}.signin.aws.amazon.com/console），这个link允许用户自己自定义一个更友好的url（只要在全球范围内不重复）。  
+进入 IAM 的Dashboard后，可以看到属于用户个人的 sign-in link（`https://{your_customer_account_number}.signin.aws.amazon.com/console`），这个link允许用户自己自定义一个更友好的url（只要在全球范围内不重复）。  
   
 创建 IAM 用户（User）是因为我们不想所有人、员工都以根用户（root user）的身份访问该 AWS Account（i.e. 公司平台、账号），这是企业、团队的安全以及授权机制的原则。新建用户默认情况下没有任何 permissions。  
 创建 IAM Group 是因为我们不想重复地给多个 IAM User 配置同样的授权，因此方便起见可以统一给一个 IAM Group 授权，然后把那些 IAM User 都加到这个 Group 里（日后也可以将 User 添加至/移除出某个 Group）。（除此之外，方便的方法还有Copy permissions from existing user、Attach existing policies directly，AWS 提供了一些default policies，Group 也可以 attach policies，policy 通过 JSON 定义）  

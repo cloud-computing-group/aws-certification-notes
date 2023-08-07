@@ -70,7 +70,7 @@ API Caching 可以缓存你的 endpoint 响应（比如多次请求中请求的 
 * 如果调用方在第一毫秒提交 5000 个请求，在第 101 毫秒提交 1000 个请求，然后在剩余 899 毫秒内均匀提交另外 4000 个请求，则 API Gateway 会在一秒内处理所有 10000 个请求，不会施加限制。
   
 ### Advanced API Gateway - SOAP Webservice Passthrough
-开发者可以配置 API Gateway 来使其作为 SOAP Webservice Passthrough。（https://www.rubix.nl/blogs/how-configure-amazon-api-gateway-soap-webservice-passthrough-minutes/）
+开发者可以配置 API Gateway 来使其作为 SOAP Webservice Passthrough。（https://www.rubix.nl/blogs/how-configure-amazon-api-gateway-soap-webservice-passthrough-minutes/ ）
   
 ### Advanced API Gateway - Exam Tips:
 * Import API's using Swagger 2.0 definition files

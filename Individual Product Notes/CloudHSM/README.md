@@ -2,7 +2,7 @@
   
 ### KMS and CloudHSM
 * 两者都是创建、管理、保存密钥以保证你在 AWS 上的数据的安全。  
-* HSM（Hardware Security Modules）是用来保护保证你的密钥的机密性，它是一个物理设备（https://zh.wikipedia.org/wiki/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9D%97），提供加密以及数字签名功能、从而可以管理密钥以加密数据，常常用于比如金融支付系统，KMS 和 CloudHSM 都使用了它。  
+* HSM（Hardware Security Modules）是用来保护保证你的密钥的机密性，它是一个物理设备（https://zh.wikipedia.org/wiki/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9D%97 ），提供加密以及数字签名功能、从而可以管理密钥以加密数据，常常用于比如金融支付系统，KMS 和 CloudHSM 都使用了它。  
 * 两者都提供了高度的安全保护机制。  
   
 KMS 是共享底层硬件设备的 - 在云数据中心里是多租户管理的，适用于多租户硬件管理对其不会带来问题的应用（但比如银行系统就不适用），Free-Tier eligible。  

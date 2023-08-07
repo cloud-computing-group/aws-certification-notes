@@ -178,11 +178,11 @@ CloudFormation 更关注于 AWS 云资源或基础设施上的服务开通、部
 当你的企业应用将使用大量 AWS 云资源或服务（包括 EC2）时，你应该同时结合使用 CloudFormation 与 OpsWorks（可以编写在 CloudFormation 里）。  
 结合使用 CloudFormation 与 OpsWorks 场景：在 CloudFormation 里开通、部署云资源与服务，通过 OpsWorks 对操作系统或基础设施做细节配置；在 CloudFormation 里更新云资源、服务、基础设施，通过 OpsWorks 更改如操作系统、应用程序。  
 使用 EB：你可能需要一些额外的云服务或不受 EB 管制的数据库，那你可以通过 CloudFormation 来配置管理、部署 EB 及那些与 EB 解耦的云服务。  
-（https://searchaws.techtarget.com/tip/When-to-use-AWS-OpsWorks-vs-CloudFormation-or-Elastic-Beanstalk）  
+（https://searchaws.techtarget.com/tip/When-to-use-AWS-OpsWorks-vs-CloudFormation-or-Elastic-Beanstalk ）  
   
 OpsWorks 支持 Chef 与 Puppet，但不支持 Ansible。  
-Chef / Puppet / Ansible 是自动化运维，减少手工运维，使用 DSL 或 YAML 来进行配置 - 简单明了友好，又或添加了更多的标准、规范从而使得不同组、人员都能配置得更加一致、安全、有保障，又或有更高级的 Declarative configuration 即声明式运维（https://my.oschina.net/zjzhai/blog/600430）与普通 shell 脚本不同其可在单个命令里可能已经集成多个 shell 命令，从而省却了许多 shell 的重复工作且自动处理执行错误失败等情况。题外话，可以把 Docker 当作一个更先进的声明式运维。  
-关于 shell 与 Chef / Puppet / Ansible 的相似与对比（http://www.voidcn.com/article/p-tofzyzje-btv.html）  
+Chef / Puppet / Ansible 是自动化运维，减少手工运维，使用 DSL 或 YAML 来进行配置 - 简单明了友好，又或添加了更多的标准、规范从而使得不同组、人员都能配置得更加一致、安全、有保障，又或有更高级的 Declarative configuration 即声明式运维（https://my.oschina.net/zjzhai/blog/600430 ）与普通 shell 脚本不同其可在单个命令里可能已经集成多个 shell 命令，从而省却了许多 shell 的重复工作且自动处理执行错误失败等情况。题外话，可以把 Docker 当作一个更先进的声明式运维。  
+关于 shell 与 Chef / Puppet / Ansible 的相似与对比（http://www.voidcn.com/article/p-tofzyzje-btv.html ）  
   
   
   
