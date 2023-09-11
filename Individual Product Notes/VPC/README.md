@@ -77,7 +77,14 @@ VPC 基本上可以说是你的云上的一个虚拟数据中心，你可以通�
 PS：以上未设置网络 ACL，因此两个子网共用一个默认的网络 ACL。  
   
 ### 关于子网
+子网的角色不是作为应用程序或系统的隔离边界（这部分应该由 Security Group 安全组和 NACL 实现），而是作为路由策略的容器（每个子网只关联到一个路由表作为其主要路由表）。  
+路由表在 AWS 中用于控制网络流量的路由和目标。它定义了数据包在网络中如何传输的规则，以及应该将数据包传送到哪个目标。  
+最佳实践是应该按照分类创建子网。主要有三个类别：公共子网、私有子网、Lambda 子网，最低要求是分别按照 IPv4 或 IPv6 来设计子网。  
+
 一个子网是私有还是公开，取决于其路由表是否设置目标为互联网网关或者目标是否间接与互联网相连比如同一个 VPC 内另一个公开子网的 NAT Gateway（若子网所在的 VPC 没有互联网网关或与互联网间接连接的网关、目标则该 VPC 内的子网只能是私有子网）（当然安全组与网络 ACL 理论上也可以通过阻止互联网协议或流量从而隔断互联网连接，但这不是它们的正确使用方法，它们更多是用于更具体的网络设置），子网本身没有私有与否的相关属性。  
+
+### 网关
+托管在私有子网内的实例上的应用程序可能具有不同的访问需求。一些应用程序需要访问互联网，而其他一些需要访问位于本地的数据库、应用程序和用户。对于这种类型的访问，AWS 提供了两种途径：虚拟网关（Virtual Gateway）和过渡网关（Transit Gateway）。虚拟网关一次只能支持一个 VPC，而过渡网关旨在简化数十到数百个 VPC 之间的互联，并将它们的连通性汇总到本地资源。虚拟网关（VGW）可以充当 VPC 的广域网集中器。  
   
 ### NAT Instance
 NAT Instance 准备被 NAT Gateway 替代（https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/vpc-nat-comparison.html ）。  
@@ -143,7 +150,18 @@ AWS Docs 原话：
 [Ref 2](https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/VPC_Security.html)  
 
 ### VPC Endpoint
-应用场景：比如私有子网内的实例想往 S3 存储数据，但是又不想走互联网（NAT Instance/Gateway），则一个可行的办法即走 AWS 内网即需使用 VPC Endpoint（Gateway 或 Interface 两种类型选择，且每个 Endpoint 选择只针对某个 AWS 服务比如 S3、EC2 等等，Interface 类型即 Elastic Network Interface）。  
+在子网中运行的应用程序可能需要连接到 AWS 的公共服务（例如 Amazon S3、Amazon Simple Notification Service（SNS）、Amazon Simple Queue Service（SQS）、Amazon API Gateway 等），或者连接到位于另一个帐户中的另一个 VPC 中的应用程序。例如，可能在另一个帐户中有一个数据库，希望将其暴露给完全不同帐户和子网中的应用程序。  
+对于这些情况，可以选择使用 VPC Endpoint。  
+
+有两种类型的 VPC Endpoint：Gateway Endpoints 和 Interface Endpoints。
+* Gateway Endpoints 仅支持 S3 和 DynamoDB。创建时，网关将添加到指定的路由表，并充当为创建它的服务的所有请求的目的地。  
+* Interface Endpoints 有很大不同，只能为由 AWS PrivateLink 提供支持的服务创建。
+  * 创建时，AWS 会创建一个接口端点，其中包含一个或多个弹性网络接口（ENI）。每个可用区只能支持一个接口端点 ENI。这充当了所有流向特定 PrivateLink 服务的流量的入口点。
+  * 创建接口端点时，会创建相关的 DNS 条目，指向端点以及端点包含的每个 ENI。要访问 PrivateLink 服务，必须将请求发送到这些主机名之一。
+  * 由于接口端点利用 ENIs，客户可以使用他们已经熟悉的云技术。接口端点可以配置具有严格限制的安全组。这些端点可以在 VPC 内外都很容易访问。从 VPC 外部访问可以通过 Direct Connect 和 VPN 实现。
+  * 客户还可以为运行在本地的其应用程序或服务创建 AWS 端点服务。这允许通过接口端点访问这些服务，接口端点可以扩展到其他 VPC（即使这些 VPC 本身没有配置 Direct Connect）。
+
+VPC Endpoint 应用场景：比如私有子网内的实例想往 S3 存储数据，但是又不想走互联网（NAT Instance/Gateway），则一个可行的办法即走 AWS 内网即需使用 VPC Endpoint（Gateway 或 Interface 两种类型选择，且每个 Endpoint 选择只针对某个 AWS 服务比如 S3、EC2 等等，Interface 类型即 Elastic Network Interface）。  
 添加 Endpoint 时需要设置其关联的 VPC 、该 Endpoint 将服务的子网对应的路由表（该路由表会为它自动添加一个新 Route）以及该 Endpoint 的 Policy。  
 Elastic Network Interface（ENI）：https://docs.aws.amazon.com/zh_cn/AWSEC2/latest/UserGuide/using-eni.html  
   
@@ -171,6 +189,11 @@ VPC 的子网的最大 size 是 /16，最小 size 是 /28。
 AWS 默认每个子网占用 5 个 IP 地址，所以比如题目考核某个子网需要 X 个 IP 可用，请问最小 CIDR 为多少时要记得把此情况考虑进去。  
 [CIDR 详解](https://github.com/yihaoye/stem-notes/blob/master/e-computer-network/computer_networks_101.md#cidr)  
   
+### 与本地网络集成
+AWS 提供了两种选项用于在 VPC 和本地网络之间建立私有连接：AWS Direct Connect 和 AWS Site-to-Site VPN。  
+AWS Site-to-Site VPN 配置利用了 IPSec，每个连接提供两个冗余的 IPSec 隧道。AWS 支持静态路由和动态路由（通过使用 BGP 协议）。  
+建议使用 BGP，因为它允许动态路由广告、通过故障检测实现高可用性以及在隧道之间进行故障切换，同时减少了管理复杂性。  
+
 ### Direct Connect Gateway
 之前知道，自定义网络（如 on-primise）要快速、低延迟、独占地连接 AWS 时需要 Direct Connect Connection（物理），如果该自定义网络想相同地连接 AWS 其他几个 region 的网络时则无需再一一建立 Direct Connect Connection，只需 AWS 云平台上不同 region 上的 VPC 间使用 Direct Connect Gateway 即可，自定义网络可以通过 Direct Connect Connection 连接的 region 间接地连接到其他 region（通过它们之间的 Direct Connect Gateway）。  
   
@@ -254,6 +277,10 @@ Centralized egress to internet：
 https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/centralized-egress-to-internet.html  
 https://www.youtube.com/watch?v=eG2zrqj0cRI  
 https://docs.aviatrix.com/HowTos/tgw_egress_vpc.html  
+
+## VPC 共享
+VPC 共享使用 Amazon 资源访问管理器（RAM）在同一 AWS 组织内的不同帐户之间共享子网。  
+VPC 共享允许客户集中管理网络、其 IP 地址空间以及访问 VPC 外部资源的访问路径。这种集中和重复使用 VPC 组件（如 NAT 网关和 Direct Connect 连接）的方法降低了管理和维护这个环境的成本。  
   
 ## 本地网络集成云的 DNS 解决方案
 https://docs.aws.amazon.com/zh_cn/prescriptive-guidance/latest/patterns/set-up-integrated-dns-resolution-for-hybrid-networks-in-amazon-route-53.html  
