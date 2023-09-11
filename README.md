@@ -1,12 +1,13 @@
 # AWS证书学习笔记
 
-## 白皮书
-《running-containerized-microservices-on-aws》 已完成  
-《aws-cloud-best-practices》 至 P7/P50  
-《microservices-on-aws》 已完成  
-《aws-devops》 已完成  
-《aws-development-test-environments》 已完成（建议多复习）  
-《infrastructure-as-code》 至 P7/P39（建议多复习）  
+## 白皮书 or Docs
+* 《running-containerized-microservices-on-aws》 已完成  
+* 《aws-cloud-best-practices》 至 P7/P50  
+* 《microservices-on-aws》 已完成  
+* 《aws-devops》 已完成  
+* 《aws-development-test-environments》 已完成（建议多复习）  
+* 《infrastructure-as-code》 至 P7/P39（建议多复习）  
+* [One to Many: Evolving VPC Design](https://aws.amazon.com/cn/blogs/architecture/one-to-many-evolving-vpc-design/)  
   
 ## A Cloud Guru
 AWS Certified Solutions Architect Associate 已完成  
