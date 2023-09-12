@@ -23,6 +23,7 @@ AWS Certified Advanced Networking Specialty 至 `VPC Endpoints`（章节 `Hybrid
 AWS Certified DevOps Engineer – Professional Level 至 `DynamoDB Concepts / DynamoDB Essentials`，另外已完成章节 `A/B Testing and Blue/Green Deployments for DevOps` `The Scenario Solver` `Deployment Pipelines with AWS Developer Tools` `AWS Secrets Manager` `Final Steps`  
   
 ## 其他
+### [最佳实践](./Practices/README.md)
 
 ### Solutions Architect Associate
 《AWS Certified Solutions Architect Official Study Guide》 至 P56/P487  
