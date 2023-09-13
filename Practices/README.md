@@ -5,3 +5,5 @@
 ![](./Game-day-reference-architecture-example.png)  
 
 ![](./Pilot-light-DR-strategy.png)  
+
+![](./Two-tier-infrastructure-on-AWS.gif)  
