@@ -7,6 +7,8 @@
 * NAT gateway - automatically assigned public IP, scale up to 10 GB, not in SG (NAT instance is).
 * VPC flow logs is stored in CloudWatch logs - VPC/Subnet/Network Interface levels.  
   
+![](./Network-Architectures.gif)  
+
 ## A Cloud Guru
   
 ### 什么是 VPC
